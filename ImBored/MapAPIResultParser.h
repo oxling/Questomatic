@@ -36,12 +36,7 @@
 typedef void (^ParseCompleteBlock)(NSArray * places);
 typedef void (^FailBlock)();
 
-@interface MapAPIResultParser : NSObject <NSXMLParserDelegate> {
-    NSXMLParser * _parser;
-    
-    ParseCompleteBlock doneBlock;
-    FailBlock failBlock;
-    
+@interface MapAPIResultParser : NSObject <NSXMLParserDelegate> {    
     Result * result;
     NSString * element;
     NSMutableArray * resultArray;

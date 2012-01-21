@@ -18,6 +18,7 @@
     CLLocation * loc;
     
     MapAPIController * mapController;
+    CLGeocoder * coder;
 }
 
 @end
@@ -30,6 +31,7 @@
     locMan.delegate = self;
     
     mapController = [[MapAPIController alloc] init];
+    coder = [[CLGeocoder alloc] init];
     
     srand(time(NULL));
 }
@@ -56,6 +58,7 @@
     [map release];
     [mapController release];
     [lastPoint release];
+    [coder release];
     
     [super dealloc];
 }
@@ -68,6 +71,20 @@ static float randomFraction() {
     if (neg) frac *= -1;
     
     return frac;
+}
+
+- (void) isValid:(CLLocation *)location complete:(void (^)(BOOL valid, CLPlacemark *p))block  {
+    [coder reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *error) {
+        BOOL inTheGoddamnOcean = NO;
+        for (CLPlacemark * p in placemarks) {
+            if (p.inlandWater || p.ocean) {
+                inTheGoddamnOcean = YES;
+                break;
+            }
+        }
+        
+        block(!inTheGoddamnOcean, [placemarks objectAtIndex:0]);
+    }];
 }
 
 - (CLLocation *) offsetLocation {
@@ -87,37 +104,40 @@ static float randomFraction() {
     map.showsUserLocation = YES;
 }
 
-int failCount = 0;
-
 - (void) generateRandomLocation {
     
     CLLocation * newLoc = [self offsetLocation];
     
-    [mapController requestNearLocation:newLoc onComplete:^(id <MKAnnotation> location) {
-        if (location) {
-            failCount = 0;
-            
-            if (self.lastPoint) [map removeAnnotation:self.lastPoint];
-           
-            [map addAnnotation:location];
-            self.lastPoint = location;
+    [self isValid:newLoc complete:^(BOOL valid, CLPlacemark * p) {
+        if (valid) {
+            [mapController requestNearLocation:newLoc onComplete:^(id <MKAnnotation> location) {
+                if (self.lastPoint)
+                    [map removeAnnotation:self.lastPoint];
+                
+                if (location) {                    
+                    [map addAnnotation:location];
+                    self.lastPoint = location;
+                } else {
+                    MKPlacemark * pm = [[MKPlacemark alloc] initWithPlacemark:p];
+                    [map addAnnotation:pm];
+                    self.lastPoint = pm;
+                    [pm release];
+                }
+                
+                button.enabled = YES;
+                [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+            }]; 
         } else {
-            if (failCount < 5) {
-                failCount++;
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [self generateRandomLocation];
-                });
-            } else {
-                failCount = 0;
-            }
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self generateRandomLocation];
+            });
         }
-        
-        button.enabled = YES;
-    }]; 
+    }];
 }
 
 - (void) didTapRandom:(id)sender {
-  //  button.enabled = NO;
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+    button.enabled = NO;
     [self generateRandomLocation];
 }
 
