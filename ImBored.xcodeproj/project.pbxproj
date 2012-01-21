@@ -37,20 +37,20 @@
 		E1AEEBAD14CB382200C14F98 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		E1AEEBAF14CB382200C14F98 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		E1AEEBB114CB382200C14F98 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		E1AEEBB514CB382200C14F98 /* ImBored-Info.plist */ = {isa = PBXFileReference; path = "ImBored-Info.plist"; sourceTree = "<group>"; };
+		E1AEEBB514CB382200C14F98 /* ImBored-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ImBored-Info.plist"; sourceTree = "<group>"; };
 		E1AEEBB714CB382200C14F98 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		E1AEEBB914CB382200C14F98 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		E1AEEBBB14CB382200C14F98 /* ImBored-Prefix.pch */ = {isa = PBXFileReference; path = "ImBored-Prefix.pch"; sourceTree = "<group>"; };
-		E1AEEBBC14CB382200C14F98 /* AppDelegate.h */ = {isa = PBXFileReference; path = AppDelegate.h; sourceTree = "<group>"; };
+		E1AEEBBB14CB382200C14F98 /* ImBored-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ImBored-Prefix.pch"; sourceTree = "<group>"; };
+		E1AEEBBC14CB382200C14F98 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		E1AEEBBD14CB382200C14F98 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		E1AEEBBF14CB382200C14F98 /* ViewController.h */ = {isa = PBXFileReference; path = ViewController.h; sourceTree = "<group>"; };
+		E1AEEBBF14CB382200C14F98 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		E1AEEBC014CB382200C14F98 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		E1AEEBC314CB382200C14F98 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController.xib; sourceTree = "<group>"; };
 		E1AEEBCA14CB382200C14F98 /* ImBoredTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ImBoredTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1AEEBCB14CB382200C14F98 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
-		E1AEEBD314CB382200C14F98 /* ImBoredTests-Info.plist */ = {isa = PBXFileReference; path = "ImBoredTests-Info.plist"; sourceTree = "<group>"; };
+		E1AEEBD314CB382200C14F98 /* ImBoredTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ImBoredTests-Info.plist"; sourceTree = "<group>"; };
 		E1AEEBD514CB382200C14F98 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		E1AEEBD714CB382200C14F98 /* ImBoredTests.h */ = {isa = PBXFileReference; path = ImBoredTests.h; sourceTree = "<group>"; };
+		E1AEEBD714CB382200C14F98 /* ImBoredTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ImBoredTests.h; sourceTree = "<group>"; };
 		E1AEEBD814CB382200C14F98 /* ImBoredTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ImBoredTests.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
