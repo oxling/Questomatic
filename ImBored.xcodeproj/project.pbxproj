@@ -21,6 +21,9 @@
 		E1AEEBD614CB382200C14F98 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E1AEEBD414CB382200C14F98 /* InfoPlist.strings */; };
 		E1AEEBD914CB382200C14F98 /* ImBoredTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E1AEEBD814CB382200C14F98 /* ImBoredTests.m */; };
 		E1AEEBE314CB388A00C14F98 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1AEEBE214CB388A00C14F98 /* CoreLocation.framework */; };
+		E1AEEBE514CB401E00C14F98 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1AEEBE414CB401E00C14F98 /* MapKit.framework */; };
+		E1AEEBE814CB505B00C14F98 /* MapAPIController.m in Sources */ = {isa = PBXBuildFile; fileRef = E1AEEBE714CB505B00C14F98 /* MapAPIController.m */; };
+		E1AEEBEB14CB581A00C14F98 /* MapAPIResultParser.m in Sources */ = {isa = PBXBuildFile; fileRef = E1AEEBEA14CB581A00C14F98 /* MapAPIResultParser.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +57,11 @@
 		E1AEEBD714CB382200C14F98 /* ImBoredTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ImBoredTests.h; sourceTree = "<group>"; };
 		E1AEEBD814CB382200C14F98 /* ImBoredTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ImBoredTests.m; sourceTree = "<group>"; };
 		E1AEEBE214CB388A00C14F98 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		E1AEEBE414CB401E00C14F98 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		E1AEEBE614CB505B00C14F98 /* MapAPIController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapAPIController.h; sourceTree = "<group>"; };
+		E1AEEBE714CB505B00C14F98 /* MapAPIController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapAPIController.m; sourceTree = "<group>"; };
+		E1AEEBE914CB581A00C14F98 /* MapAPIResultParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapAPIResultParser.h; sourceTree = "<group>"; };
+		E1AEEBEA14CB581A00C14F98 /* MapAPIResultParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapAPIResultParser.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,6 +69,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E1AEEBE514CB401E00C14F98 /* MapKit.framework in Frameworks */,
 				E1AEEBE314CB388A00C14F98 /* CoreLocation.framework in Frameworks */,
 				E1AEEBAE14CB382200C14F98 /* UIKit.framework in Frameworks */,
 				E1AEEBB014CB382200C14F98 /* Foundation.framework in Frameworks */,
@@ -107,6 +116,7 @@
 				E1AEEBAD14CB382200C14F98 /* UIKit.framework */,
 				E1AEEBAF14CB382200C14F98 /* Foundation.framework */,
 				E1AEEBB114CB382200C14F98 /* CoreGraphics.framework */,
+				E1AEEBE414CB401E00C14F98 /* MapKit.framework */,
 				E1AEEBCB14CB382200C14F98 /* SenTestingKit.framework */,
 			);
 			name = Frameworks;
@@ -120,6 +130,10 @@
 				E1AEEBBF14CB382200C14F98 /* ViewController.h */,
 				E1AEEBC014CB382200C14F98 /* ViewController.m */,
 				E1AEEBC214CB382200C14F98 /* ViewController.xib */,
+				E1AEEBE614CB505B00C14F98 /* MapAPIController.h */,
+				E1AEEBE714CB505B00C14F98 /* MapAPIController.m */,
+				E1AEEBE914CB581A00C14F98 /* MapAPIResultParser.h */,
+				E1AEEBEA14CB581A00C14F98 /* MapAPIResultParser.m */,
 				E1AEEBB414CB382200C14F98 /* Supporting Files */,
 			);
 			path = ImBored;
@@ -265,6 +279,8 @@
 				E1AEEBBA14CB382200C14F98 /* main.m in Sources */,
 				E1AEEBBE14CB382200C14F98 /* AppDelegate.m in Sources */,
 				E1AEEBC114CB382200C14F98 /* ViewController.m in Sources */,
+				E1AEEBE814CB505B00C14F98 /* MapAPIController.m in Sources */,
+				E1AEEBEB14CB581A00C14F98 /* MapAPIResultParser.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
