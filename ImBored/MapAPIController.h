@@ -8,8 +8,9 @@
 
 #import <Foundation/Foundation.h>
 #import <MapKit/MKAnnotation.h>
+#import "Location.h"
 
-typedef void (^CompleteBlock)(id <MKAnnotation> location);
+typedef void (^CompleteBlock)(Location * location);
 
 @interface MapAPIController : NSObject <NSURLConnectionDelegate> {
     NSURLConnection * connection;

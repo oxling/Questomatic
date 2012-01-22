@@ -7,42 +7,20 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <MapKit/MKAnnotation.h>
 #import <CoreLocation/CoreLocation.h>
 
-@interface Result : NSObject <MKAnnotation> {
-@private
-    NSMutableString * latitude;
-    NSMutableString * longitude;
-    NSMutableString * name;
-    NSMutableString * address;
-    
-    NSMutableString * type;
-}
-
-@property (nonatomic, readonly) CLLocationCoordinate2D coordinate;
-@property (nonatomic, copy) NSString * title;
-@property (nonatomic, copy) NSString * subtitle;
-
-@property (nonatomic, readonly) NSMutableString * latitude;
-@property (nonatomic, readonly) NSMutableString * longitude;
-@property (nonatomic, readonly) NSMutableString * name;
-@property (nonatomic, readonly) NSMutableString * address;
-@property (nonatomic, readonly) NSMutableString * type;
-
-@end
-
+#import "Location.h"
 
 typedef void (^ParseCompleteBlock)(NSArray * places);
 typedef void (^FailBlock)();
 
 @interface MapAPIResultParser : NSObject <NSXMLParserDelegate> {    
-    Result * result;
+    Location * result;
     NSString * element;
     NSMutableArray * resultArray;
 }
 
-@property (nonatomic, retain) Result * result;
+@property (nonatomic, retain) Location * result;
 @property (nonatomic, retain) NSString * element;
 
 - (NSArray *) parseResults:(NSData *)data;

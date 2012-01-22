@@ -8,10 +8,12 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
+#import "MapAPIController.h"
 
 typedef void (^FoundLocationBlock)(CLLocation *newLocation);
 typedef void (^DecodedLocationBlock)(NSArray *placemarks);
 typedef void (^ValidatedLocationBlock)(BOOL valid, CLPlacemark * placemark);
+typedef void (^QuestLocationBlock)(Location * location);
 
 @interface LocationController : NSObject <CLLocationManagerDelegate> {
     CLLocationCoordinate2D userCoordinates;
@@ -19,15 +21,18 @@ typedef void (^ValidatedLocationBlock)(BOOL valid, CLPlacemark * placemark);
     CLGeocoder * coder;
     
     FoundLocationBlock onFoundLocation;
+    MapAPIController * mapController;
 }
 
 @property (nonatomic, copy) FoundLocationBlock onFoundLocation;
 
 - (void) startUpdatingUserLocation:(FoundLocationBlock)onComplete;
 - (void) stopUpdatingUserLocation;
-- (CLLocation *) randomLocationNear:(CLLocationCoordinate2D)center latitudeRange:(CLLocationDegrees)latDiff longitudeRange:(CLLocationDegrees)longDiff;
+- (void) randomLocationNear:(CLLocationCoordinate2D)center latitudeRange:(CLLocationDegrees)latDiff longitudeRange:(CLLocationDegrees)longDiff complete:(QuestLocationBlock)onComplete;
 
 - (void) decodeLocation:(CLLocation *)location complete:(DecodedLocationBlock)onComplete;
 - (void) validateLocation:(CLLocation *)location complete:(ValidatedLocationBlock)onComplete;
+
+- (NSString *) addressStringFromDictionary:(NSDictionary *)dict withName:(NSString *)name;
 
 @end

@@ -9,61 +9,6 @@
 #import "MapAPIResultParser.h"
 #import <CoreLocation/CoreLocation.h>
 
-@implementation Result
-@synthesize latitude, longitude, name, address, type;
-
-- (id) init {
-    self = [super init];
-    if (self) {
-        latitude = [[NSMutableString alloc] init];
-        longitude = [[NSMutableString alloc] init];
-        name = [[NSMutableString alloc] init];
-        address = [[NSMutableString alloc] init];
-        type = [[NSMutableString alloc] init];
-    }
-    return self;
-}
-
-- (CLLocationCoordinate2D) coordinate {
-    NSNumberFormatter * f = [[NSNumberFormatter alloc] init];
-    NSNumber * latNumber = [f numberFromString:latitude];
-    NSNumber * longNumber = [f numberFromString:longitude];
-    
-    CLLocationDegrees lat = [latNumber doubleValue];
-    CLLocationDegrees lng = [longNumber doubleValue];
-    
-    [f release];
-    
-    CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(lat, lng);
-    return coordinate;
-}
-
-- (void) setTitle:(NSString *)title {
-}
-- (void) setSubtitle:(NSString *)subtitle {
-}
-
-- (NSString *) title {
-    return [NSString stringWithString:name];
-}
-
-- (NSString *) subtitle {
-    return [NSString stringWithString:address];
-}
-
-- (void) dealloc{
-    [latitude release];
-    [longitude release];
-    [name release];
-    [address release];
-    [type release];
-    
-    [super dealloc];
-}
-
-@end
-
-
 @implementation MapAPIResultParser
 @synthesize result, element;
 
@@ -116,7 +61,7 @@ BOOL parseGeometry = NO;
     self.element = elementName;
     
     if ([self.element isEqualToString:@"result"]) {
-        self.result = [[[Result alloc] init] autorelease];
+        self.result = [[[Location alloc] init] autorelease];
     }
     
     else if ([self.element isEqualToString:@"location"]) {

@@ -14,22 +14,21 @@
 #import "MapAPIController.h"
 #import "LocationController.h"
 
+#import "Location.h"
+
 @interface ViewController : UIViewController <MKMapViewDelegate, UIActionSheetDelegate> {
     MKMapView * map;
     UIButton * button;
     
-    id lastPoint;
-    MKPlacemark * home;
+    Location * currentPoint;
+    Location * userLocation;
     
-    CLLocation * userLocation;
-    
-    MapAPIController * mapController;
     LocationController * locationController;
 }
 @property (nonatomic, retain) IBOutlet MKMapView * map;
 @property (nonatomic, retain) IBOutlet UIButton * button;
-@property (nonatomic, retain) id <MKAnnotation> lastPoint;
-@property (nonatomic, retain) CLLocation * userLocation;
+@property (nonatomic, retain) Location * currentPoint;
+@property (nonatomic, retain) Location * userLocation;
 
 - (IBAction)didTapRandom:(id)sender;
 

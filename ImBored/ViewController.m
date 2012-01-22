@@ -15,10 +15,9 @@
 #import "LocationController.h"
 
 @implementation ViewController
-@synthesize map, button, lastPoint, userLocation;
+@synthesize map, button, currentPoint, userLocation;
 
 - (void) initVariables { 
-    mapController = [[MapAPIController alloc] init];
     locationController = [[LocationController alloc] init];
     
     srand(time(NULL));
@@ -43,9 +42,7 @@
 - (void) dealloc{
     [button release];
     [map release];
-    [mapController release];
-    [lastPoint release];
-    [home release];
+    [currentPoint release];
     [locationController release];
     [userLocation release];
     
@@ -64,7 +61,7 @@
 
 
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation {
-    if (annotation == self.lastPoint || annotation == home) {
+    if (annotation == self.currentPoint || annotation == userLocation) {
         static NSString * const identifer = @"mapview_id";
         MKPinAnnotationView * pin = (MKPinAnnotationView *) [mapView dequeueReusableAnnotationViewWithIdentifier:identifer];
         if (!pin) {
@@ -73,8 +70,8 @@
         
         pin.annotation = annotation;
         
-        if (annotation == home) {
-            pin.canShowCallout = NO;
+        if (annotation == userLocation) {
+            pin.canShowCallout = YES;
             pin.pinColor = MKPinAnnotationColorGreen;
         } else {
             pin.canShowCallout = YES;
@@ -96,7 +93,7 @@
     if (buttonIndex == [actionSheet cancelButtonIndex]) {
         return;
     } else {
-        CLLocationCoordinate2D newCoord = [self.lastPoint coordinate];
+        CLLocationCoordinate2D newCoord = [self.currentPoint coordinate];
         CLLocationCoordinate2D oldCoord = [map.userLocation coordinate];
         NSString * urlStr = [NSString stringWithFormat:@"http://maps.google.com/?saddr=%f,%f&daddr=%f,%f", 
                              oldCoord.latitude, oldCoord.longitude,
@@ -108,39 +105,25 @@
 
 - (void) generateRandomLocation {
     
-    CLLocation * newLoc = [locationController randomLocationNear:self.userLocation.coordinate
-                             latitudeRange:map.region.span.latitudeDelta/2 
-                            longitudeRange:map.region.span.longitudeDelta/2];
-    
-    [locationController validateLocation:newLoc complete:^(BOOL valid, CLPlacemark * p) {
-        if (valid) {
-            [mapController requestNearLocation:newLoc onComplete:^(id <MKAnnotation> location) {
-                if (self.lastPoint)
-                    [map removeAnnotation:self.lastPoint];
-                
-                if (location) {                    
-                    [map addAnnotation:location];
-                    self.lastPoint = location;
-                } else {
-                    MKPlacemark * pm = [[MKPlacemark alloc] initWithPlacemark:p];
-                    [map addAnnotation:pm];
-                    self.lastPoint = pm;
-                    [pm release];
-                }
-                
-                [map setCenterCoordinate:[self.lastPoint coordinate] animated:YES];
-                [map setSelectedAnnotations:[NSArray arrayWithObject:self.lastPoint]];
-                
-                button.enabled = YES;
-                [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-            }]; 
-        } else {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self generateRandomLocation];
-            });
-        }
-    }];
-        
+    [locationController randomLocationNear:map.region.center
+                             latitudeRange:map.region.span.latitudeDelta/2
+                            longitudeRange:map.region.span.longitudeDelta/2
+                                  complete:^(Location *location) {
+                                      if (self.currentPoint)
+                                          [map removeAnnotation:self.currentPoint];
+                                      
+                                      if (location) {                    
+                                          [map addAnnotation:location];
+                                          self.currentPoint = location;
+                                      }
+                                      
+                                      [map setCenterCoordinate:[self.currentPoint coordinate] animated:YES];
+                                      [map setSelectedAnnotations:[NSArray arrayWithObject:self.currentPoint]];
+                                      
+                                      button.enabled = YES;
+                                      [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+
+                                  }];        
 }
 
 - (void) didTapRandom:(id)sender {
@@ -165,9 +148,15 @@
             map.centerCoordinate = newLocation.coordinate;
             MKCoordinateSpan span = MKCoordinateSpanMake(0.03, 0.03);
             map.region = MKCoordinateRegionMake(newLocation.coordinate, span);
-            self.userLocation = newLocation;
             
-            //TODO: add location to map
+            Location * loc = [[Location alloc] init];
+            loc.title = @"Me";
+            loc.coordinate = newLocation.coordinate;
+            self.userLocation = loc;
+            
+            [map addAnnotation:userLocation];
+            
+            [loc release];
         } else {
             //TODO: warning
         }
