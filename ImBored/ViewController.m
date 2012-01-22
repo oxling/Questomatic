@@ -9,29 +9,17 @@
 #import "ViewController.h"
 #import <CoreLocation/CoreLocation.h>
 #import <MapKit/MapKit.h>
+#import <AddressBook/ABPerson.h>
 
 #import "MapAPIController.h"
-
-@interface ViewController () {
-@private
-    CLLocationManager * locMan;
-    CLLocation * loc;
-    
-    MapAPIController * mapController;
-    CLGeocoder * coder;
-}
-
-@end
+#import "LocationController.h"
 
 @implementation ViewController
-@synthesize map, button, lastPoint;
+@synthesize map, button, lastPoint, userLocation;
 
 - (void) initVariables { 
-    locMan = [[CLLocationManager alloc] init];
-    locMan.delegate = self;
-    
     mapController = [[MapAPIController alloc] init];
-    coder = [[CLGeocoder alloc] init];
+    locationController = [[LocationController alloc] init];
     
     srand(time(NULL));
 }
@@ -53,62 +41,78 @@
 }
 
 - (void) dealloc{
-    [locMan release];
     [button release];
     [map release];
     [mapController release];
     [lastPoint release];
-    [coder release];
+    [home release];
+    [locationController release];
+    [userLocation release];
     
     [super dealloc];
 }
 
-static float randomFraction() {
-    signed int r = rand() % 100;
-    int neg = rand() % 2;
-    
-    float frac = ((float) r)/100;
-    if (neg) frac *= -1;
-    
-    return frac;
+- (void) motionEnded:(UIEventSubtype)motion withEvent:(UIEvent *)event {
+    if (event.subtype == UIEventSubtypeMotionShake) {
+        [self didTapRandom:nil];
+    }
 }
 
-- (void) isValid:(CLLocation *)location complete:(void (^)(BOOL valid, CLPlacemark *p))block  {
-    [coder reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *error) {
-        BOOL inTheGoddamnOcean = NO;
-        for (CLPlacemark * p in placemarks) {
-            if (p.inlandWater || p.ocean) {
-                inTheGoddamnOcean = YES;
-                break;
-            }
+- (BOOL) canBecomeFirstResponder {
+    return YES;
+}
+
+
+- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation {
+    if (annotation == self.lastPoint || annotation == home) {
+        static NSString * const identifer = @"mapview_id";
+        MKPinAnnotationView * pin = (MKPinAnnotationView *) [mapView dequeueReusableAnnotationViewWithIdentifier:identifer];
+        if (!pin) {
+            pin = [[[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:identifer] autorelease];
         }
         
-        block(!inTheGoddamnOcean, [placemarks objectAtIndex:0]);
-    }];
+        pin.annotation = annotation;
+        
+        if (annotation == home) {
+            pin.canShowCallout = NO;
+            pin.pinColor = MKPinAnnotationColorGreen;
+        } else {
+            pin.canShowCallout = YES;
+            pin.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
+            pin.pinColor = MKPinAnnotationColorRed;
+        }
+        
+        return pin;
+    } else return nil;
 }
 
-- (CLLocation *) offsetLocation {
-    CLLocationCoordinate2D x = loc.coordinate;
-    
-    MKCoordinateRegion rect = map.region;    
-
-    float latDiff =  randomFraction() * (rect.span.latitudeDelta/2);
-    float longDiff = randomFraction() * (rect.span.longitudeDelta/2);
-    
-    CLLocation * new = [[CLLocation alloc] initWithLatitude:x.latitude+latDiff longitude:x.longitude+longDiff];
-    return [new autorelease];
+- (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control {
+    UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Open in Maps", nil];
+    [sheet showInView:self.view];
+    [sheet release];
 }
 
-- (void) centerMap {
-    map.region = MKCoordinateRegionMake(loc.coordinate, MKCoordinateSpanMake(0.02, 0.02));
-    map.showsUserLocation = YES;
+- (void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex == [actionSheet cancelButtonIndex]) {
+        return;
+    } else {
+        CLLocationCoordinate2D newCoord = [self.lastPoint coordinate];
+        CLLocationCoordinate2D oldCoord = [map.userLocation coordinate];
+        NSString * urlStr = [NSString stringWithFormat:@"http://maps.google.com/?saddr=%f,%f&daddr=%f,%f", 
+                             oldCoord.latitude, oldCoord.longitude,
+                             newCoord.latitude, newCoord.longitude];
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlStr]];
+    }
 }
+
 
 - (void) generateRandomLocation {
     
-    CLLocation * newLoc = [self offsetLocation];
+    CLLocation * newLoc = [locationController randomLocationNear:self.userLocation.coordinate
+                             latitudeRange:map.region.span.latitudeDelta/2 
+                            longitudeRange:map.region.span.longitudeDelta/2];
     
-    [self isValid:newLoc complete:^(BOOL valid, CLPlacemark * p) {
+    [locationController validateLocation:newLoc complete:^(BOOL valid, CLPlacemark * p) {
         if (valid) {
             [mapController requestNearLocation:newLoc onComplete:^(id <MKAnnotation> location) {
                 if (self.lastPoint)
@@ -124,6 +128,9 @@ static float randomFraction() {
                     [pm release];
                 }
                 
+                [map setCenterCoordinate:[self.lastPoint coordinate] animated:YES];
+                [map setSelectedAnnotations:[NSArray arrayWithObject:self.lastPoint]];
+                
                 button.enabled = YES;
                 [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
             }]; 
@@ -133,6 +140,7 @@ static float randomFraction() {
             });
         }
     }];
+        
 }
 
 - (void) didTapRandom:(id)sender {
@@ -141,32 +149,42 @@ static float randomFraction() {
     [self generateRandomLocation];
 }
 
-- (void) locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
-    loc = [newLocation retain];
-    [self centerMap];
-    
-    [locMan stopUpdatingLocation];
-    [locMan release];
-    locMan = nil;
-}
 
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [locMan startUpdatingLocation];
+    [self becomeFirstResponder];
+    
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+    [locationController startUpdatingUserLocation:^(CLLocation *newLocation) {
+        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+        [locationController stopUpdatingUserLocation];
+
+        if (newLocation) {
+            map.centerCoordinate = newLocation.coordinate;
+            MKCoordinateSpan span = MKCoordinateSpanMake(0.03, 0.03);
+            map.region = MKCoordinateRegionMake(newLocation.coordinate, span);
+            self.userLocation = newLocation;
+            
+            //TODO: add location to map
+        } else {
+            //TODO: warning
+        }
+    }];
     
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
 	[super viewWillDisappear:animated];
+    [self resignFirstResponder];
+    [locationController stopUpdatingUserLocation];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
 {
 	[super viewDidDisappear:animated];
-    [locMan stopUpdatingLocation];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

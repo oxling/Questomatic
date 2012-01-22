@@ -85,27 +85,29 @@
 */
 
 - (void) dealloc {
+    [resultArray release];
     [result release];
     [element release];
-    [resultArray release];
     
     [super dealloc];
 }
 
-- (void) parseResults:(NSString *)_result onComplete:(ParseCompleteBlock)_doneBlock onFail:(FailBlock)_failBlock{    
-    resultArray = [[NSMutableArray alloc] init];
+- (NSArray *) parseResults:(NSData *)data {    
+    resultArray = [[NSMutableArray array] retain];
 
-    NSXMLParser * parser = [[NSXMLParser alloc] initWithData:[_result dataUsingEncoding:NSUTF8StringEncoding]];
+    NSXMLParser * parser = [[NSXMLParser alloc] initWithData:data];
     parser.delegate = self;
    
-    BOOL success = [parser parse];
-   
-    if (success && [resultArray count] > 0)
-        _doneBlock([NSArray arrayWithArray:resultArray]);
-    else
-        _failBlock();
-
+    [parser parse];
     [parser release];
+    
+    NSArray * finalResults = [NSArray arrayWithArray:resultArray];
+    
+    [resultArray release];
+    resultArray = nil;
+    
+    return finalResults;
+    
 }
 
 BOOL parseGeometry = NO;

@@ -45,6 +45,6 @@ typedef void (^FailBlock)();
 @property (nonatomic, retain) Result * result;
 @property (nonatomic, retain) NSString * element;
 
-- (void) parseResults:(NSString *)result onComplete:(ParseCompleteBlock)completeBlock onFail:(FailBlock)failBlock;
+- (NSArray *) parseResults:(NSData *)data;
 
 @end

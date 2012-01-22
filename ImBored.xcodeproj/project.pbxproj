@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E1573B7914CC79AE004AEF21 /* LocationController.m in Sources */ = {isa = PBXBuildFile; fileRef = E1573B7814CC79AE004AEF21 /* LocationController.m */; };
+		E1573B7D14CC7CC8004AEF21 /* Location.m in Sources */ = {isa = PBXBuildFile; fileRef = E1573B7C14CC7CC8004AEF21 /* Location.m */; };
 		E1AEEBAE14CB382200C14F98 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1AEEBAD14CB382200C14F98 /* UIKit.framework */; };
 		E1AEEBB014CB382200C14F98 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1AEEBAF14CB382200C14F98 /* Foundation.framework */; };
 		E1AEEBB214CB382200C14F98 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1AEEBB114CB382200C14F98 /* CoreGraphics.framework */; };
@@ -24,6 +26,7 @@
 		E1AEEBE514CB401E00C14F98 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1AEEBE414CB401E00C14F98 /* MapKit.framework */; };
 		E1AEEBE814CB505B00C14F98 /* MapAPIController.m in Sources */ = {isa = PBXBuildFile; fileRef = E1AEEBE714CB505B00C14F98 /* MapAPIController.m */; };
 		E1AEEBEB14CB581A00C14F98 /* MapAPIResultParser.m in Sources */ = {isa = PBXBuildFile; fileRef = E1AEEBEA14CB581A00C14F98 /* MapAPIResultParser.m */; };
+		E1AEEBED14CB965100C14F98 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1AEEBEC14CB965100C14F98 /* AddressBook.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,6 +40,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		E1573B7714CC79AE004AEF21 /* LocationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocationController.h; sourceTree = "<group>"; };
+		E1573B7814CC79AE004AEF21 /* LocationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationController.m; sourceTree = "<group>"; };
+		E1573B7B14CC7CC8004AEF21 /* Location.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Location.h; sourceTree = "<group>"; };
+		E1573B7C14CC7CC8004AEF21 /* Location.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Location.m; sourceTree = "<group>"; };
 		E1AEEBA914CB382200C14F98 /* ImBored.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImBored.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1AEEBAD14CB382200C14F98 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		E1AEEBAF14CB382200C14F98 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -62,6 +69,7 @@
 		E1AEEBE714CB505B00C14F98 /* MapAPIController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapAPIController.m; sourceTree = "<group>"; };
 		E1AEEBE914CB581A00C14F98 /* MapAPIResultParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapAPIResultParser.h; sourceTree = "<group>"; };
 		E1AEEBEA14CB581A00C14F98 /* MapAPIResultParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapAPIResultParser.m; sourceTree = "<group>"; };
+		E1AEEBEC14CB965100C14F98 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,6 +77,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E1AEEBED14CB965100C14F98 /* AddressBook.framework in Frameworks */,
 				E1AEEBE514CB401E00C14F98 /* MapKit.framework in Frameworks */,
 				E1AEEBE314CB388A00C14F98 /* CoreLocation.framework in Frameworks */,
 				E1AEEBAE14CB382200C14F98 /* UIKit.framework in Frameworks */,
@@ -112,6 +121,7 @@
 		E1AEEBAC14CB382200C14F98 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E1AEEBEC14CB965100C14F98 /* AddressBook.framework */,
 				E1AEEBE214CB388A00C14F98 /* CoreLocation.framework */,
 				E1AEEBAD14CB382200C14F98 /* UIKit.framework */,
 				E1AEEBAF14CB382200C14F98 /* Foundation.framework */,
@@ -130,6 +140,10 @@
 				E1AEEBBF14CB382200C14F98 /* ViewController.h */,
 				E1AEEBC014CB382200C14F98 /* ViewController.m */,
 				E1AEEBC214CB382200C14F98 /* ViewController.xib */,
+				E1573B7B14CC7CC8004AEF21 /* Location.h */,
+				E1573B7C14CC7CC8004AEF21 /* Location.m */,
+				E1573B7714CC79AE004AEF21 /* LocationController.h */,
+				E1573B7814CC79AE004AEF21 /* LocationController.m */,
 				E1AEEBE614CB505B00C14F98 /* MapAPIController.h */,
 				E1AEEBE714CB505B00C14F98 /* MapAPIController.m */,
 				E1AEEBE914CB581A00C14F98 /* MapAPIResultParser.h */,
@@ -281,6 +295,8 @@
 				E1AEEBC114CB382200C14F98 /* ViewController.m in Sources */,
 				E1AEEBE814CB505B00C14F98 /* MapAPIController.m in Sources */,
 				E1AEEBEB14CB581A00C14F98 /* MapAPIResultParser.m in Sources */,
+				E1573B7914CC79AE004AEF21 /* LocationController.m in Sources */,
+				E1573B7D14CC7CC8004AEF21 /* Location.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -448,6 +464,7 @@
 				E1AEEBDE14CB382200C14F98 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		E1AEEBDF14CB382200C14F98 /* Build configuration list for PBXNativeTarget "ImBoredTests" */ = {
 			isa = XCConfigurationList;
@@ -456,6 +473,7 @@
 				E1AEEBE114CB382200C14F98 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

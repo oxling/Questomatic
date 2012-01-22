@@ -41,21 +41,17 @@
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
-    NSString * result = [[NSString alloc] initWithData:d encoding:NSUTF8StringEncoding];
-    
+
     MapAPIResultParser * p = [[MapAPIResultParser alloc] init];
-   
-    [p parseResults:result onComplete:^(NSArray *places) {
+
+    NSArray * places = [p parseResults:d];
+    if ([places count] > 0) {
         int indx = rand() % [places count];
         block([places objectAtIndex:indx]);
-        [p release];
-    } onFail:^{
+    } else {
         block(nil);
-        [p release];
-    }];
-    
-    [result release];
-    
+    }    
+
     [block release];
     block = nil;
     
