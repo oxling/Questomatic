@@ -16,6 +16,8 @@
 
 #import "Location.h"
 
+#import "ShakeView.h"
+
 @interface ViewController : UIViewController <MKMapViewDelegate, UIActionSheetDelegate> {
     MKMapView * map;
     UIButton * button;
@@ -24,6 +26,9 @@
     Location * userLocation;
     
     LocationController * locationController;
+    ShakeView * shakeView;
+    
+    NSTimer * actionTimer;
 }
 @property (nonatomic, retain) IBOutlet MKMapView * map;
 @property (nonatomic, retain) IBOutlet UIButton * button;

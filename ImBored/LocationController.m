@@ -166,7 +166,7 @@ UInt8 tryCount = 0;
     NSString * state = [dict objectForKey:(NSString *)kABPersonAddressStateKey];
     NSString * country = [dict objectForKey:(NSString *)kABPersonAddressCountryKey];
     
-    if (street) [str appendFormat:@"%@, ", street];
+    if (street && [name isEqualToString:street] == NO) [str appendFormat:@"%@, ", street];
     if (city && [name isEqualToString:city] == NO) [str appendFormat:@"%@, ", city];
     if (state && [name isEqualToString:state] == NO) [str appendFormat:@"%@, ", state];
     

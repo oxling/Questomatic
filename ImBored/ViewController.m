@@ -17,8 +17,13 @@
 @implementation ViewController
 @synthesize map, button, currentPoint, userLocation;
 
+BOOL fireActivityTimer;
+
 - (void) initVariables { 
     locationController = [[LocationController alloc] init];
+    shakeView = [[ShakeView alloc] initWithFrame:CGRectMake(0, 0, 176, 126)];
+    shakeView.center = self.view.center;
+    shakeView.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin;
     
     srand(time(NULL));
 }
@@ -45,13 +50,34 @@
     [currentPoint release];
     [locationController release];
     [userLocation release];
+    [shakeView release];
     
     [super dealloc];
+}
+
+#pragma mark - Actions
+
+- (void) activityOccured {
+    if (fireActivityTimer) {
+        [actionTimer invalidate];
+        actionTimer = nil;
+    
+        [shakeView animateRemoveFromSuperView];
+        actionTimer = [NSTimer scheduledTimerWithTimeInterval:20.0 target:self selector:@selector(noActivity) userInfo:nil repeats:NO];
+    }
+}
+
+- (void) noActivity {
+    [actionTimer invalidate];
+    actionTimer = nil;
+    
+    [shakeView animateAddToSuperView:self.view];
 }
 
 - (void) motionEnded:(UIEventSubtype)motion withEvent:(UIEvent *)event {
     if (event.subtype == UIEventSubtypeMotionShake) {
         [self didTapRandom:nil];
+        [self activityOccured];
     }
 }
 
@@ -59,6 +85,19 @@
     return YES;
 }
 
+#pragma mark - Map
+
+- (void)mapView:(MKMapView *)mapView regionWillChangeAnimated:(BOOL)animated {
+    [self activityOccured];
+}
+
+- (void) mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view {
+    [self activityOccured];
+}
+
+- (void) mapView:(MKMapView *)mapView didDeselectAnnotationView:(MKAnnotationView *)view {
+    [self activityOccured];
+}
 
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation {
     if (annotation == self.currentPoint || annotation == userLocation) {
@@ -138,7 +177,7 @@
 {
     [super viewDidAppear:animated];
     [self becomeFirstResponder];
-    
+
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     [locationController startUpdatingUserLocation:^(CLLocation *newLocation) {
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
@@ -147,16 +186,24 @@
         if (newLocation) {
             map.centerCoordinate = newLocation.coordinate;
             MKCoordinateSpan span = MKCoordinateSpanMake(0.03, 0.03);
-            map.region = MKCoordinateRegionMake(newLocation.coordinate, span);
             
+            [map setRegion:MKCoordinateRegionMake(newLocation.coordinate, span) animated:YES];
+
             Location * loc = [[Location alloc] init];
             loc.title = @"Me";
             loc.coordinate = newLocation.coordinate;
+            
+            
+            if (self.userLocation) 
+                [map removeAnnotation:userLocation];
+            
             self.userLocation = loc;
-            
             [map addAnnotation:userLocation];
-            
             [loc release];
+            
+            fireActivityTimer = YES;
+            [self noActivity];
+            
         } else {
             //TODO: warning
         }
@@ -168,7 +215,14 @@
 {
 	[super viewWillDisappear:animated];
     [self resignFirstResponder];
+    
     [locationController stopUpdatingUserLocation];
+    
+    fireActivityTimer = NO;
+    [actionTimer invalidate];
+    actionTimer = nil;
+    
+    [shakeView removeFromSuperview];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -176,10 +230,13 @@
 	[super viewDidDisappear:animated];
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    // Return YES for supported orientations
-    return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+    fireActivityTimer = NO;
+    return YES;
+}
+
+- (void) didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    fireActivityTimer = YES;
 }
 
 @end

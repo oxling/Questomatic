@@ -15,9 +15,11 @@ typedef void (^CompleteBlock)(Location * location);
 @interface MapAPIController : NSObject <NSURLConnectionDelegate> {
     NSURLConnection * connection;
     CompleteBlock block;
-    NSMutableData * d;
+    NSMutableData * data;
 }
 @property (nonatomic, retain) NSURLConnection * connection;
+@property (nonatomic, retain) NSMutableData * data;
+@property (nonatomic, copy) CompleteBlock block;
 
 - (void) requestNearLocation:(CLLocation *)location onComplete:(CompleteBlock)complete;
 
