@@ -10,7 +10,6 @@
 #import <QuartzCore/QuartzCore.h>
 
 @interface ShakeView : UIView {
-    CALayer * shadowLayer;
     CALayer * backgroundLayer;
     
     UILabel * label;

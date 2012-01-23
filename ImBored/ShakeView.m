@@ -24,27 +24,6 @@
         CGRect insetRect = CGRectInset(frame, 5, 5);
         UIColor * color = [UIColor colorWithWhite:0.1 alpha:1.0];
         
-        shadowLayer = [[CALayer layer] retain];
-        backgroundLayer = [[CALayer layer] retain];
-        
-        shadowLayer.frame = frame;
-        backgroundLayer.frame = insetRect;
-        
-        [self.layer addSublayer:shadowLayer];
-        [self.layer addSublayer:backgroundLayer];
-        
-        CGPathRef path = CGPathCreateWithRect(frame, NULL);
-        
-        shadowLayer.shadowPath = path;
-        shadowLayer.shadowRadius = 6.0;
-        shadowLayer.shadowColor = [[UIColor blackColor] CGColor];
-        shadowLayer.shadowOpacity = 0.5;
-        
-        CGPathRelease(path);
-        
-        backgroundLayer.cornerRadius = 5.0;
-        backgroundLayer.backgroundColor = [color CGColor];
-        
         label = [[UILabel alloc] initWithFrame:CGRectInset(insetRect, 10, 5)];
         [self addSubview:label];
         
@@ -54,6 +33,7 @@
         label.textAlignment = UITextAlignmentCenter;
         label.font = [UIFont fontWithName:@"Helvetica" size:12.0];
         label.text = [self labelString];
+        label.layer.cornerRadius = 10.0;
         
         self.alpha = 0.0;
     }
@@ -81,7 +61,6 @@
 
 - (void) dealloc {
     [label release];
-    [shadowLayer release];
     [backgroundLayer release];
     
     [super dealloc];

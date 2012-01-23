@@ -116,7 +116,12 @@ UInt8 tryCount = 0;
                 
                 Location * loc = [[Location alloc] init];
                 loc.coordinate = newLoc.coordinate;
-                loc.title = @"Unknown Location";
+                if (placemark.inlandWater)
+                    loc.title = placemark.inlandWater;
+                else if (placemark.ocean)
+                    loc.title = placemark.ocean;
+                else 
+                    loc.title = @"Unknown Location";
                 loc.subtitle = [NSString stringWithFormat:@"%0.6f, %0.6f", loc.coordinate.latitude, loc.coordinate.longitude];
                 
                 onComplete(loc);

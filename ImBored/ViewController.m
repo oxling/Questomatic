@@ -1,3 +1,5 @@
+
+
 //
 //  ViewController.m
 //  ImBored
@@ -13,6 +15,8 @@
 
 #import "MapAPIController.h"
 #import "LocationController.h"
+#import "QuestAnnotationView.h"
+#import "LocationCalloutView.h"
 
 @implementation ViewController
 @synthesize map, button, currentPoint, userLocation;
@@ -87,36 +91,34 @@ BOOL fireActivityTimer;
 
 #pragma mark - Map
 
+LocationCalloutView * c;
+
 - (void)mapView:(MKMapView *)mapView regionWillChangeAnimated:(BOOL)animated {
     [self activityOccured];
 }
 
 - (void) mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view {
     [self activityOccured];
+    
 }
 
 - (void) mapView:(MKMapView *)mapView didDeselectAnnotationView:(MKAnnotationView *)view {
     [self activityOccured];
+    [c removeFromSuperview];
 }
 
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation {
-    if (annotation == self.currentPoint || annotation == userLocation) {
-        static NSString * const identifer = @"mapview_id";
-        MKPinAnnotationView * pin = (MKPinAnnotationView *) [mapView dequeueReusableAnnotationViewWithIdentifier:identifer];
+    if (annotation == self.currentPoint) {
+        static NSString * const identifer = @"mapview_id_quest";
+        LocationCalloutView * pin = (LocationCalloutView *) [mapView dequeueReusableAnnotationViewWithIdentifier:identifer];
         if (!pin) {
-            pin = [[[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:identifer] autorelease];
+            pin = [[[LocationCalloutView alloc] initWithAnnotation:annotation reuseIdentifier:identifer] autorelease];
         }
         
         pin.annotation = annotation;
+        pin.title = [annotation title];
+        pin.subtitle = [annotation subtitle];
         
-        if (annotation == userLocation) {
-            pin.canShowCallout = YES;
-            pin.pinColor = MKPinAnnotationColorGreen;
-        } else {
-            pin.canShowCallout = YES;
-            pin.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
-            pin.pinColor = MKPinAnnotationColorRed;
-        }
         
         return pin;
     } else return nil;
