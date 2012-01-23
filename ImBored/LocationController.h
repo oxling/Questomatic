@@ -13,7 +13,7 @@
 typedef void (^FoundLocationBlock)(CLLocation *newLocation);
 typedef void (^DecodedLocationBlock)(NSArray *placemarks);
 typedef void (^ValidatedLocationBlock)(BOOL valid, CLPlacemark * placemark);
-typedef void (^QuestLocationBlock)(Location * location);
+typedef void (^QuestLocationBlock)(Quest * location);
 
 @interface LocationController : NSObject <CLLocationManagerDelegate> {
     CLLocationCoordinate2D userCoordinates;

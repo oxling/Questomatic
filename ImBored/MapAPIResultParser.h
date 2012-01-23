@@ -9,18 +9,18 @@
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
 
-#import "Location.h"
+#import "Quest.h"
 
 typedef void (^ParseCompleteBlock)(NSArray * places);
 typedef void (^FailBlock)();
 
 @interface MapAPIResultParser : NSObject <NSXMLParserDelegate> {    
-    Location * result;
+    Quest * result;
     NSString * element;
     NSMutableArray * resultArray;
 }
 
-@property (nonatomic, retain) Location * result;
+@property (nonatomic, retain) Quest * result;
 @property (nonatomic, retain) NSString * element;
 
 - (NSArray *) parseResults:(NSData *)data;

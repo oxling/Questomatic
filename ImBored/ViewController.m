@@ -15,11 +15,10 @@
 
 #import "MapAPIController.h"
 #import "LocationController.h"
-#import "QuestAnnotationView.h"
-#import "LocationCalloutView.h"
+#import "QuestCalloutView.h"
 
 @implementation ViewController
-@synthesize map, button, currentPoint, userLocation;
+@synthesize map, currentPoint, userLocation;
 
 BOOL fireActivityTimer;
 
@@ -49,7 +48,6 @@ BOOL fireActivityTimer;
 }
 
 - (void) dealloc{
-    [button release];
     [map release];
     [currentPoint release];
     [locationController release];
@@ -91,7 +89,7 @@ BOOL fireActivityTimer;
 
 #pragma mark - Map
 
-LocationCalloutView * c;
+QuestCalloutView * c;
 
 - (void)mapView:(MKMapView *)mapView regionWillChangeAnimated:(BOOL)animated {
     [self activityOccured];
@@ -107,18 +105,96 @@ LocationCalloutView * c;
     [c removeFromSuperview];
 }
 
+- (id) randomItem:(NSArray *) array {
+    int indx = rand() % [array count];
+    
+    NSAssert(indx < [array count], @"Random index out of bounds");
+    
+    return [array objectAtIndex:indx];
+}
+
+- (NSString *) verbForType:(NSString *)type {
+    
+    if ([type isEqualToString:@"grocery_or_supermarket"]) {
+        return @"buy a snack at";
+    }
+    
+    if ([type isEqualToString:@"cafe"]) {
+        return @"drink coffee at";
+    }
+    
+    if ([type isEqualToString:@"restaurant"] ||
+        [type isEqualToString:@"bakery"]) {
+        
+        return @"eat at";
+    }
+    
+    if ([type isEqualToString:@"library"]) {
+        return @"read a book at";
+    }
+    
+    if ([type isEqualToString:@"bar"] ||
+        [type isEqualToString:@"night_club"]) {
+        return @"drink at";
+    }
+    
+    if ([type isEqualToString:@"store"]) {
+        return [self randomItem:[NSArray arrayWithObjects:@"shop at", @"buy something at", @"browse at", nil]];
+    }
+        
+    if ([type isEqualToString:@"gym"]) {
+        return @"work out at";
+    }
+    
+    if ([type isEqualToString:@"salon"]) {
+        return @"get a haircut at";
+    }
+    
+    if ([type isEqualToString:@"movie_theater"]) {
+        return @"see a movie at";
+    }
+    
+    if ([type isEqualToString:@"natural_feature"] ||
+        [type isEqualToString:@"point_of_interest"]) {
+        return [self randomItem:[NSArray arrayWithObjects:@"see", @"take a picture of", @"admire", nil]];
+    }
+    
+    if ([type isEqualToString:@"water"]) {
+        return [self randomItem:[NSArray arrayWithObjects:@"swim in the", @"sail on the", @"fish in the", @"drink from the", nil]];
+    }
+    
+    if ([type isEqualToString:@"spa"]) {
+        return @"relax at";
+    }
+    
+    else return nil;
+}
+
+- (NSString *) getVerbForQuest:(Quest *)q {
+    NSString * verb = @"visit";
+    for (NSString * type in q.types) {
+        NSString * newVerb = [self verbForType:type];
+        if (newVerb) {
+            verb = newVerb;
+            break;
+        }
+    }
+    
+    return verb;
+}
+
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation {
     if (annotation == self.currentPoint) {
         static NSString * const identifer = @"mapview_id_quest";
-        LocationCalloutView * pin = (LocationCalloutView *) [mapView dequeueReusableAnnotationViewWithIdentifier:identifer];
+        QuestCalloutView * pin = (QuestCalloutView *) [mapView dequeueReusableAnnotationViewWithIdentifier:identifer];
         if (!pin) {
-            pin = [[[LocationCalloutView alloc] initWithAnnotation:annotation reuseIdentifier:identifer] autorelease];
+            pin = [[[QuestCalloutView alloc] initWithAnnotation:annotation reuseIdentifier:identifer] autorelease];
         }
         
         pin.annotation = annotation;
         pin.title = [annotation title];
         pin.subtitle = [annotation subtitle];
-        
+        pin.questString = [self getVerbForQuest:(Quest *)annotation];
         
         return pin;
     } else return nil;
@@ -149,7 +225,7 @@ LocationCalloutView * c;
     [locationController randomLocationNear:map.region.center
                              latitudeRange:map.region.span.latitudeDelta/2
                             longitudeRange:map.region.span.longitudeDelta/2
-                                  complete:^(Location *location) {
+                                  complete:^(Quest *location) {
                                       if (self.currentPoint)
                                           [map removeAnnotation:self.currentPoint];
                                       
@@ -191,7 +267,7 @@ LocationCalloutView * c;
             
             [map setRegion:MKCoordinateRegionMake(newLocation.coordinate, span) animated:YES];
 
-            Location * loc = [[Location alloc] init];
+            Quest * loc = [[Quest alloc] init];
             loc.title = @"Me";
             loc.coordinate = newLocation.coordinate;
             
@@ -207,7 +283,13 @@ LocationCalloutView * c;
             [self noActivity];
             
         } else {
-            //TODO: warning
+            CLLocationCoordinate2D coord =  CLLocationCoordinate2DMake(42.378075, -71.044464);
+            MKCoordinateSpan span = MKCoordinateSpanMake(0.20, 0.20);
+            [map setRegion:MKCoordinateRegionMake(coord, span) animated:YES];
+            
+            [[[[UIAlertView alloc] initWithTitle:@"GPS Problem" message:@"Unable to find your coordinates. Zoom in where you would like to search for an adventure." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] autorelease] show];
+            
+            fireActivityTimer = YES;
         }
     }];
     

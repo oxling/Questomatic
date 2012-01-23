@@ -12,3 +12,10 @@
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
 #endif
+
+
+#ifdef DEBUG
+#define DebugLog(str, ...) NSLog(@"%s %i: %@", __PRETTY_FUNCTION__, __LINE__, [NSString stringWithFormat:str, __VA_ARGS__])
+#else
+#define DebugLog(str, ...) 
+#endif

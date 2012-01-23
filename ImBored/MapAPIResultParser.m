@@ -9,8 +9,18 @@
 #import "MapAPIResultParser.h"
 #import <CoreLocation/CoreLocation.h>
 
+@interface MapAPIResultParser ()  {
+@private
+    BOOL parseGeometry;
+    NSMutableString * typeString;
+
+}
+@property (nonatomic, retain)  NSMutableString * typeString;
+
+@end
+
 @implementation MapAPIResultParser
-@synthesize result, element;
+@synthesize result, element, typeString;
 
 /* 
  <status>OK</status>
@@ -33,6 +43,7 @@
     [resultArray release];
     [result release];
     [element release];
+    [typeString release];
     
     [super dealloc];
 }
@@ -55,17 +66,19 @@
     
 }
 
-BOOL parseGeometry = NO;
-
 - (void) parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict {
     self.element = elementName;
     
     if ([self.element isEqualToString:@"result"]) {
-        self.result = [[[Location alloc] init] autorelease];
+        self.result = [[[Quest alloc] init] autorelease];
     }
     
     else if ([self.element isEqualToString:@"location"]) {
         parseGeometry = YES;
+    }
+    
+    else if ([self.element isEqualToString:@"type"]) {
+        self.typeString = [NSMutableString string];
     }
 }
 
@@ -93,7 +106,11 @@ BOOL parseGeometry = NO;
     }
     
     else if ([self.element isEqualToString:@"type"]) {
-        [self.result.type appendString:string];
+        [typeString appendString:string];
+    }
+    
+    else if ([self.element isEqualToString:@"html_attribution"]) {
+        [self.result.listings appendString:string];
     }
 }
 
@@ -102,12 +119,21 @@ BOOL parseGeometry = NO;
     
     if ([elementName isEqualToString:@"result"]) {
         
+        if ([self.result.listings length] > 0) {
+            DebugLog(@"Result %@ has listings: %@", self.result, self.result.listings);
+        }
+        
         [resultArray addObject:self.result];
         self.result = nil;
     }
     
     else if ([elementName isEqualToString:@"location"]) {
         parseGeometry = NO;
+    }
+    
+    else if ([elementName isEqualToString:@"type"]) {
+        [self.result.types addObject:[NSString stringWithString:typeString]];
+        self.typeString = nil;
     }
     
     self.element = nil;

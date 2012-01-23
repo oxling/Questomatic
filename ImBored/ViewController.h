@@ -14,7 +14,7 @@
 #import "MapAPIController.h"
 #import "LocationController.h"
 
-#import "Location.h"
+#import "Quest.h"
 
 #import "ShakeView.h"
 
@@ -22,8 +22,8 @@
     MKMapView * map;
     UIButton * button;
     
-    Location * currentPoint;
-    Location * userLocation;
+    Quest * currentPoint;
+    Quest * userLocation;
     
     LocationController * locationController;
     ShakeView * shakeView;
@@ -31,10 +31,7 @@
     NSTimer * actionTimer;
 }
 @property (nonatomic, retain) IBOutlet MKMapView * map;
-@property (nonatomic, retain) IBOutlet UIButton * button;
-@property (nonatomic, retain) Location * currentPoint;
-@property (nonatomic, retain) Location * userLocation;
-
-- (IBAction)didTapRandom:(id)sender;
+@property (nonatomic, retain) Quest * currentPoint;
+@property (nonatomic, retain) Quest * userLocation;
 
 @end

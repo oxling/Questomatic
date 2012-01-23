@@ -89,7 +89,20 @@ static float randomFraction() {
     float latDiff =  randomFraction() * (latRange);
     float longDiff = randomFraction() * (longRange);
     
-    CLLocation * new = [[CLLocation alloc] initWithLatitude:center.latitude+latDiff longitude:center.longitude+longDiff];
+
+    CLLocationCoordinate2D coord = CLLocationCoordinate2DMake(center.latitude+latDiff, center.longitude+longDiff);
+    while (CLLocationCoordinate2DIsValid(coord) == NO) {
+        
+        DebugLog(@"Invalid coordinates generated: %f, %f", coord.latitude, coord.longitude);
+        
+        float latDiff =  randomFraction() * (latRange);
+        float longDiff = randomFraction() * (longRange);
+        
+        coord = CLLocationCoordinate2DMake(center.latitude+latDiff, center.longitude+longDiff);
+
+    }
+    
+    CLLocation * new = [[CLLocation alloc] initWithLatitude:coord.latitude longitude:coord.longitude];
     return [new autorelease];
 }
 
@@ -104,7 +117,8 @@ UInt8 tryCount = 0;
         
         //If it's not valid, try again.
         if (!valid) {
-            if (tryCount < 10) {
+            if (tryCount < 3) {
+                DebugLog(@"Calculated location %f, %f is invalid. Trying again...", newLoc.coordinate.latitude, newLoc.coordinate.longitude);
                 tryCount++;
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [self randomLocationNear:center latitudeRange:latDiff longitudeRange:longDiff complete:[[onComplete copy] autorelease]];
@@ -113,13 +127,18 @@ UInt8 tryCount = 0;
             //Couldn't reverse geocode it, or maybe the user is looking at the ocean
             } else {
                 tryCount = 0;
+                DebugLog(@"Could not decode and validate location near %f, %f after 3 tries.", newLoc.coordinate.latitude, newLoc.coordinate.longitude);
                 
-                Location * loc = [[Location alloc] init];
+                Quest * loc = [[Quest alloc] init];
                 loc.coordinate = newLoc.coordinate;
-                if (placemark.inlandWater)
+                if (placemark.inlandWater) {
                     loc.title = placemark.inlandWater;
-                else if (placemark.ocean)
+                    [loc.types addObject:@"water"];
+                }
+                else if (placemark.ocean) {
+                    [loc.types addObject:@"water"];
                     loc.title = placemark.ocean;
+                }
                 else 
                     loc.title = @"Unknown Location";
                 loc.subtitle = [NSString stringWithFormat:@"%0.6f, %0.6f", loc.coordinate.latitude, loc.coordinate.longitude];
@@ -130,17 +149,21 @@ UInt8 tryCount = 0;
             }
         }
         
+        //If the location is valid, try and find interesting information about it from Google.
         else {
-            [mapController requestNearLocation:newLoc onComplete:^(Location *location) {
+            [mapController requestNearLocation:newLoc onComplete:^(Quest *location) {
                 
                 //If the map controller gave us a location, great!
                 if (location) {
+                    DebugLog(@"Sucessfully retrieved location information from Google: %@", location.name);
                     onComplete(location);
                 }
                 
                 //Otherwise, we need to generate a new one based on geocoded data
                 else {
-                    Location * loc = [[Location alloc] init];
+                    DebugLog(@"Could not retrieve location information for %@ from Google.", placemark.name);
+                    
+                    Quest * loc = [[Quest alloc] init];
                     loc.coordinate = placemark.location.coordinate;
                     
                     
