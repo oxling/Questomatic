@@ -109,7 +109,7 @@
 @end
 
 @implementation QuestCalloutView
-@synthesize subtitle, title, questString;
+@synthesize subtitle, title, questString, htmlString;
 LayerDelegate * del;
 
 - (void) initVariables:(CGRect)frame {
@@ -126,7 +126,7 @@ LayerDelegate * del;
     CGFloat left = CGRectGetMinX(frame)+OFFSET+5;
     CGFloat width = CGRectGetMaxX(frame)-OFFSET*2-10;
     
-    questLabel = [[UILabel alloc] initWithFrame:CGRectMake(left, OFFSET+5, width, 17)];
+    questLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, width, 17)];
     questLabel.backgroundColor = [UIColor clearColor];
     questLabel.numberOfLines = 0;
     questLabel.font = [UIFont fontWithName:@"Helvetica" size:12.0];
@@ -136,9 +136,7 @@ LayerDelegate * del;
     questLabel.textAlignment = UITextAlignmentCenter;
     questLabel.text = @"Your quest is to visit";
     
-    [self addSubview:questLabel];
-    
-    titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(left, CGRectGetMaxY(questLabel.frame), width, 40)];
+    titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(questLabel.frame), width, 40)];
     titleLabel.backgroundColor = [UIColor clearColor];
     titleLabel.textAlignment = UITextAlignmentCenter;
     titleLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:14.0];
@@ -147,9 +145,7 @@ LayerDelegate * del;
     titleLabel.shadowColor = [UIColor darkGrayColor];
     titleLabel.shadowOffset = CGSizeMake(1, 1);
     
-    [self addSubview:titleLabel];
-    
-    subtitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(left, CGRectGetMaxY(titleLabel.frame), width, 20)];
+    subtitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(titleLabel.frame), width, 17)];
     subtitleLabel.backgroundColor = [UIColor clearColor];
     subtitleLabel.numberOfLines = 0;
     subtitleLabel.font = [UIFont fontWithName:@"Helvetica" size:12.0];
@@ -158,13 +154,21 @@ LayerDelegate * del;
     subtitleLabel.shadowColor = [UIColor darkGrayColor];
     subtitleLabel.textAlignment = UITextAlignmentCenter;
     
-    [self addSubview:subtitleLabel];
+    CGFloat containerHeight = questLabel.frame.size.height+titleLabel.frame.size.height+subtitleLabel.frame.size.height;
+    
+    labelContainer = [[UIView alloc] initWithFrame:CGRectMake(left, OFFSET+5, width, containerHeight)];
+    labelContainer.backgroundColor = [UIColor clearColor];
+    [self addSubview:labelContainer];
+    
+    [labelContainer addSubview:subtitleLabel];
+    [labelContainer addSubview:titleLabel];
+    [labelContainer addSubview:questLabel];
     
 }
 
 - (id)initWithFrame:(CGRect)frame
 {
-    self = [super initWithFrame:frame];
+    self = [super initWithFrame:CGRectMake(frame.origin.x, frame.origin.y, 200, frame.size.height)];
     if (self) {
         [self initVariables:frame];
     }
@@ -180,10 +184,9 @@ LayerDelegate * del;
     return self;
 }
 
-- (void) refreshLabels {
-    CGFloat left = OFFSET+5;
+- (void) updateFrameAndLabels {
     CGFloat width = 200-OFFSET*2-10;
-    
+        
     CGSize questSize = [questLabel.text sizeWithFont:questLabel.font constrainedToSize:CGSizeMake(width, 30)
                                        lineBreakMode:UILineBreakModeWordWrap];
     
@@ -193,25 +196,78 @@ LayerDelegate * del;
     CGSize subtitleSize = [subtitleLabel.text sizeWithFont:subtitleLabel.font constrainedToSize:CGSizeMake(width, 30) 
                                              lineBreakMode:UILineBreakModeWordWrap];
     
-    questLabel.frame = CGRectMake(left, OFFSET+3, width, questSize.height);
-    titleLabel.frame = CGRectMake(left, CGRectGetMaxY(questLabel.frame), width, titleSize.height);
-    subtitleLabel.frame = CGRectMake(left, CGRectGetMaxY(titleLabel.frame), width, subtitleSize.height);
+    CGFloat htmlSize = htmlView ? 18 : 0;
     
+    CGFloat contentSize = subtitleSize.height + questSize.height + titleSize.height + htmlSize + 50 - OFFSET*2;
+    
+    CGRect contentRect = CGRectMake(OFFSET, OFFSET, 200-OFFSET*2, contentSize);
+    
+    labelContainer.frame = CGRectMake(0, 0, width, questSize.height+titleSize.height+subtitleSize.height);
+    labelContainer.center = CGPointMake(roundf(CGRectGetMidX(contentRect)), roundf(CGRectGetMidY(contentRect)));
+    
+    questLabel.frame = CGRectMake(0, 0, width, questSize.height);
+    titleLabel.frame = CGRectMake(0, CGRectGetMaxY(questLabel.frame), width, titleSize.height);
+    subtitleLabel.frame = CGRectMake(0, CGRectGetMaxY(titleLabel.frame), width, subtitleSize.height);
+    
+    htmlView.frame = CGRectMake(OFFSET+5, CGRectGetMaxY(contentRect)-htmlSize, width, htmlSize);
+    
+    self.frame = CGRectMake(0, 0, 200, CGRectGetHeight(contentRect) + CARAT_SIZE + OFFSET*2);
+}
+
+- (CGFloat) contentHeight {
+    return questLabel.frame.size.height + titleLabel.frame.size.height + subtitleLabel.frame.size.height;
 }
 
 - (void) setQuestString:(NSString *)newQuestString {
     questLabel.text = [NSString stringWithFormat:@"Your quest is to %@", newQuestString];
-    [self refreshLabels];
 }
 
 - (void) setTitle:(NSString *)newTitle {
     titleLabel.text = newTitle;
-    [self refreshLabels];
 }
 
 - (void) setSubtitle:(NSString *)newSubtitle {
     subtitleLabel.text = newSubtitle;
-    [self refreshLabels];
+}
+
+- (void) setHtmlString:(NSString *)newHtmlString {
+    
+    if (newHtmlString) {
+        
+        [newHtmlString retain];
+        [htmlString release];
+        htmlString = newHtmlString;
+        
+        if (!htmlView) {
+            htmlView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
+            htmlView.backgroundColor = [UIColor clearColor];
+            htmlView.opaque = NO; 
+            htmlView.delegate = self;
+            htmlView.scrollView.scrollEnabled = NO;
+            htmlView.scalesPageToFit = YES;
+            
+            [self addSubview:htmlView];
+        }
+        
+        [htmlView loadHTMLString:htmlString baseURL:nil];
+    } else {
+        [htmlString release];
+        htmlString = nil;
+        
+        [htmlView removeFromSuperview];
+        [htmlView release];
+        htmlView = nil;
+    }
+    
+}
+
+- (BOOL) webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
+    if (navigationType == UIWebViewNavigationTypeLinkClicked) {
+        [[UIApplication sharedApplication] openURL:request.URL];
+        return NO;
+    }
+    
+    return YES;
 }
 
 - (NSString *) questString {
@@ -227,7 +283,14 @@ LayerDelegate * del;
 }
 
 - (CGPoint) centerOffset {
-    return CGPointMake(0, -60);
+    return CGPointMake(0, -roundf(self.frame.size.height/2));
+}
+
+- (void) setFrame:(CGRect)frame {
+    [super setFrame:frame];
+    backgroundLayer.frame = frame;
+    
+    [self setNeedsDisplay];
 }
 
 - (void) dealloc {
@@ -236,6 +299,9 @@ LayerDelegate * del;
     [subtitleLabel release];
     [titleLabel release];
     [questLabel release];
+    [labelContainer release];
+    [htmlString release];
+    [htmlView release];
     
     [super dealloc];
 }

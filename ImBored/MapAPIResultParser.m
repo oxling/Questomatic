@@ -48,6 +48,18 @@
     [super dealloc];
 }
 
+- (NSMutableString * ) processListingsHTML:(NSString *)listing {
+    
+    NSMutableString * str = [NSMutableString stringWithString:listing];
+    [str replaceOccurrencesOfString:@"&lt;" withString:@"<" options:NSCaseInsensitiveSearch range:NSMakeRange(0, [str length])];
+    [str replaceOccurrencesOfString:@"&gt;" withString:@">" options:NSCaseInsensitiveSearch range:NSMakeRange(0, [str length])];
+    
+    [str insertString:@"<html><body><font size=\"12\" color=white>" atIndex:0];
+    [str insertString:@"</font></body></html>" atIndex:[str length]];
+
+    return str;
+}
+
 - (NSArray *) parseResults:(NSData *)data {    
     resultArray = [[NSMutableArray array] retain];
 
@@ -110,7 +122,8 @@
     }
     
     else if ([self.element isEqualToString:@"html_attribution"]) {
-        [self.result.listings appendString:string];
+        NSString * normalString = [self processListingsHTML:string];
+        [self.result.listings appendString:normalString];
     }
 }
 

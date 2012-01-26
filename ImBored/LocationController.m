@@ -155,7 +155,7 @@ UInt8 tryCount = 0;
                 
                 //If the map controller gave us a location, great!
                 if (location) {
-                    DebugLog(@"Sucessfully retrieved location information from Google: %@", location.name);
+                    DebugLog(@"Successfully retrieved location information from Google: %@", location.name);
                     onComplete(location);
                 }
                 

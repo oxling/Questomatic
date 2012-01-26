@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		E14E4C5114CCE2F700CB5A67 /* QuestSelectionVC.m in Sources */ = {isa = PBXBuildFile; fileRef = E14E4C4F14CCE2F700CB5A67 /* QuestSelectionVC.m */; };
-		E14E4C5214CCE2F700CB5A67 /* QuestSelectionVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = E14E4C5014CCE2F700CB5A67 /* QuestSelectionVC.xib */; };
 		E1573B7914CC79AE004AEF21 /* LocationController.m in Sources */ = {isa = PBXBuildFile; fileRef = E1573B7814CC79AE004AEF21 /* LocationController.m */; };
 		E1573B7D14CC7CC8004AEF21 /* Quest.m in Sources */ = {isa = PBXBuildFile; fileRef = E1573B7C14CC7CC8004AEF21 /* Quest.m */; };
 		E1573B8014CC963D004AEF21 /* ShakeView.m in Sources */ = {isa = PBXBuildFile; fileRef = E1573B7F14CC963D004AEF21 /* ShakeView.m */; };
@@ -45,9 +43,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		E14E4C4E14CCE2F700CB5A67 /* QuestSelectionVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QuestSelectionVC.h; sourceTree = "<group>"; };
-		E14E4C4F14CCE2F700CB5A67 /* QuestSelectionVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QuestSelectionVC.m; sourceTree = "<group>"; };
-		E14E4C5014CCE2F700CB5A67 /* QuestSelectionVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = QuestSelectionVC.xib; sourceTree = "<group>"; };
 		E1573B7714CC79AE004AEF21 /* LocationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocationController.h; sourceTree = "<group>"; };
 		E1573B7814CC79AE004AEF21 /* LocationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationController.m; sourceTree = "<group>"; };
 		E1573B7B14CC7CC8004AEF21 /* Quest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Quest.h; sourceTree = "<group>"; };
@@ -119,9 +114,6 @@
 				E1AEEBBF14CB382200C14F98 /* ViewController.h */,
 				E1AEEBC014CB382200C14F98 /* ViewController.m */,
 				E1AEEBC214CB382200C14F98 /* ViewController.xib */,
-				E14E4C4E14CCE2F700CB5A67 /* QuestSelectionVC.h */,
-				E14E4C4F14CCE2F700CB5A67 /* QuestSelectionVC.m */,
-				E14E4C5014CCE2F700CB5A67 /* QuestSelectionVC.xib */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -294,7 +286,6 @@
 			files = (
 				E1AEEBB814CB382200C14F98 /* InfoPlist.strings in Resources */,
 				E1AEEBC414CB382200C14F98 /* ViewController.xib in Resources */,
-				E14E4C5214CCE2F700CB5A67 /* QuestSelectionVC.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -338,7 +329,6 @@
 				E1573B7D14CC7CC8004AEF21 /* Quest.m in Sources */,
 				E1573B8014CC963D004AEF21 /* ShakeView.m in Sources */,
 				E1573B8514CCAC6A004AEF21 /* QuestCalloutView.m in Sources */,
-				E14E4C5114CCE2F700CB5A67 /* QuestSelectionVC.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

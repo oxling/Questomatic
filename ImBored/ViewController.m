@@ -139,7 +139,7 @@ QuestCalloutView * c;
     }
     
     if ([type isEqualToString:@"store"]) {
-        return [self randomItem:[NSArray arrayWithObjects:@"shop at", @"buy something at", @"browse at", nil]];
+        return [self randomItem:[NSArray arrayWithObjects:@"shop at", @"buy something at", @"browse", nil]];
     }
         
     if ([type isEqualToString:@"gym"]) {
@@ -195,7 +195,10 @@ QuestCalloutView * c;
         pin.title = [annotation title];
         pin.subtitle = [annotation subtitle];
         pin.questString = [self getVerbForQuest:(Quest *)annotation];
+        pin.htmlString = [(Quest *)annotation listings];
         
+        [pin updateFrameAndLabels];
+                
         return pin;
     } else return nil;
 }
@@ -287,7 +290,7 @@ QuestCalloutView * c;
             MKCoordinateSpan span = MKCoordinateSpanMake(0.20, 0.20);
             [map setRegion:MKCoordinateRegionMake(coord, span) animated:YES];
             
-            [[[[UIAlertView alloc] initWithTitle:@"GPS Problem" message:@"Unable to find your coordinates. Zoom in where you would like to search for an adventure." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] autorelease] show];
+            [[[[UIAlertView alloc] initWithTitle:@"GPS Problem" message:@"Unable to find your coordinates. Zoom in where you would like to search for a quest." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] autorelease] show];
             
             fireActivityTimer = YES;
         }

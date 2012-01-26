@@ -13,7 +13,7 @@
 
 - (NSString *) labelString {
     NSString * device = [[UIDevice currentDevice] model];
-    return [NSString stringWithFormat:@"Shake your %@ to find a new adventure on the map", device];
+    return [NSString stringWithFormat:@"Shake your %@ to find a new quest on the map", device];
 }
 
 - (id)initWithFrame:(CGRect)frame
