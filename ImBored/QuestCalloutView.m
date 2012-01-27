@@ -123,8 +123,8 @@ LayerDelegate * del;
     
     self.backgroundColor = [UIColor clearColor];
     
-    CGFloat left = CGRectGetMinX(frame)+OFFSET+5;
-    CGFloat width = CGRectGetMaxX(frame)-OFFSET*2-10;
+    CGFloat left = CGRectGetMinX(frame)+OFFSET*2;
+    CGFloat width = CGRectGetMaxX(frame)-OFFSET*4;
     
     questLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, width, 17)];
     questLabel.backgroundColor = [UIColor clearColor];
@@ -185,7 +185,7 @@ LayerDelegate * del;
 }
 
 - (void) updateFrameAndLabels {
-    CGFloat width = 200-OFFSET*2-10;
+    CGFloat width = 200-OFFSET*4;
         
     CGSize questSize = [questLabel.text sizeWithFont:questLabel.font constrainedToSize:CGSizeMake(width, 30)
                                        lineBreakMode:UILineBreakModeWordWrap];
@@ -198,12 +198,15 @@ LayerDelegate * del;
     
     CGFloat htmlSize = htmlView ? 18 : 0;
     
-    CGFloat contentSize = subtitleSize.height + questSize.height + titleSize.height + htmlSize + 50 - OFFSET*2;
+    CGFloat contentSize = roundf(subtitleSize.height + questSize.height + titleSize.height + htmlSize + 50 - OFFSET*2);
+    CGRect contentRect = CGRectMake(OFFSET*2, OFFSET, 200-OFFSET*4, contentSize);
     
-    CGRect contentRect = CGRectMake(OFFSET, OFFSET, 200-OFFSET*2, contentSize);
-    
-    labelContainer.frame = CGRectMake(0, 0, width, questSize.height+titleSize.height+subtitleSize.height);
-    labelContainer.center = CGPointMake(roundf(CGRectGetMidX(contentRect)), roundf(CGRectGetMidY(contentRect)));
+    CGFloat labelTotal = questSize.height+titleSize.height+subtitleSize.height;
+    labelContainer.frame = CGRectMake(roundf(CGRectGetMidX(contentRect) - width/2), 
+                                      roundf(CGRectGetMidY(contentRect) - labelTotal/2),
+                                      width, 
+                                      labelTotal);
+
     
     questLabel.frame = CGRectMake(0, 0, width, questSize.height);
     titleLabel.frame = CGRectMake(0, CGRectGetMaxY(questLabel.frame), width, titleSize.height);
@@ -286,9 +289,13 @@ LayerDelegate * del;
     return CGPointMake(0, -roundf(self.frame.size.height/2));
 }
 
+- (CGRect) roundedFrame:(CGRect)rect {
+    return CGRectMake(roundf(rect.origin.x), roundf(rect.origin.y), roundf(rect.size.width), roundf(rect.size.height));
+}
+
 - (void) setFrame:(CGRect)frame {
-    [super setFrame:frame];
-    backgroundLayer.frame = frame;
+    [super setFrame:[self roundedFrame:frame]];
+    backgroundLayer.frame = [self roundedFrame:frame];
     
     [self setNeedsDisplay];
 }

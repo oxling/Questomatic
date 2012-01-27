@@ -34,4 +34,6 @@
 @property (nonatomic, retain) Quest * currentPoint;
 @property (nonatomic, retain) Quest * userLocation;
 
+- (id) randomItem:(id)item, ... NS_REQUIRES_NIL_TERMINATION;
+
 @end

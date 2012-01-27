@@ -105,10 +105,32 @@ QuestCalloutView * c;
     [c removeFromSuperview];
 }
 
-- (id) randomItem:(NSArray *) array {
+- (void) mapViewWillStartLoadingMap:(MKMapView *)mapView {
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+}
+
+- (void) mapViewDidFinishLoadingMap:(MKMapView *)mapView {
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+}
+
+- (void) mapViewDidFailLoadingMap:(MKMapView *)mapView withError:(NSError *)error {
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+}
+
+- (id) randomItem:(id) item, ... {
+    NSMutableArray * array = [NSMutableArray array];
+    
+    va_list args;
+    va_start(args, item);
+    for (id arg = item; arg != nil; arg = va_arg(args, id)) {
+        [array addObject:arg];
+    }
+    va_end(args);
+
+    
     int indx = rand() % [array count];
     
-    NSAssert(indx < [array count], @"Random index out of bounds");
+    NSAssert(indx < [array count], @"Random index %i out of bounds for array %@", indx, array);
     
     return [array objectAtIndex:indx];
 }
@@ -135,11 +157,11 @@ QuestCalloutView * c;
     
     if ([type isEqualToString:@"bar"] ||
         [type isEqualToString:@"night_club"]) {
-        return @"drink at";
+        return [self randomItem:@"drink at", @"dance at", nil];
     }
     
     if ([type isEqualToString:@"store"]) {
-        return [self randomItem:[NSArray arrayWithObjects:@"shop at", @"buy something at", @"browse", nil]];
+        return [self randomItem:@"shop at", @"buy something at", nil];
     }
         
     if ([type isEqualToString:@"gym"]) {
@@ -147,7 +169,7 @@ QuestCalloutView * c;
     }
     
     if ([type isEqualToString:@"salon"]) {
-        return @"get a haircut at";
+        return [self randomItem:@"get a haircut at", @"dye your hair at", nil];
     }
     
     if ([type isEqualToString:@"movie_theater"]) {
@@ -156,11 +178,11 @@ QuestCalloutView * c;
     
     if ([type isEqualToString:@"natural_feature"] ||
         [type isEqualToString:@"point_of_interest"]) {
-        return [self randomItem:[NSArray arrayWithObjects:@"see", @"take a picture of", @"admire", nil]];
+        return [self randomItem:@"see", @"take a picture of", @"admire", nil];
     }
     
     if ([type isEqualToString:@"water"]) {
-        return [self randomItem:[NSArray arrayWithObjects:@"swim in the", @"sail on the", @"fish in the", @"drink from the", nil]];
+        return [self randomItem:@"swim in the", @"sail on the", @"fish in the", @"drink from the", nil];
     }
     
     if ([type isEqualToString:@"spa"]) {
@@ -171,7 +193,7 @@ QuestCalloutView * c;
 }
 
 - (NSString *) getVerbForQuest:(Quest *)q {
-    NSString * verb = @"visit";
+    NSString * verb = [self randomItem:@"visit", @"see", @"go to", nil];
     for (NSString * type in q.types) {
         NSString * newVerb = [self verbForType:type];
         if (newVerb) {
