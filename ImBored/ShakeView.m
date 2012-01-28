@@ -21,21 +21,23 @@
     self = [super initWithFrame:frame];
     if (self) {
         
-        CGRect insetRect = CGRectInset(frame, 5, 5);
-        UIColor * color = [UIColor colorWithWhite:0.1 alpha:1.0];
+        UIColor * color = [UIColor colorWithWhite:0.1 alpha:0.8];
         
-        label = [[UILabel alloc] initWithFrame:CGRectInset(insetRect, 10, 5)];
+        label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height-5)];
         [self addSubview:label];
         
         label.backgroundColor = color;
         label.textColor = [UIColor whiteColor];
+        label.shadowColor = [UIColor darkGrayColor];
+        label.shadowOffset = CGSizeMake(1, 1);
         label.numberOfLines = 0;
         label.textAlignment = UITextAlignmentCenter;
-        label.font = [UIFont fontWithName:@"Helvetica" size:12.0];
+        label.font = [UIFont fontWithName:@"Helvetica" size:14.0];
         label.text = [self labelString];
-        label.layer.cornerRadius = 5.0;
         
-        self.alpha = 0.0;
+        label.layer.cornerRadius = 10.0;
+        
+        self.backgroundColor = [UIColor clearColor];
     }
     return self;
 }
