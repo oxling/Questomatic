@@ -30,6 +30,7 @@
 		E1AEEBE814CB505B00C14F98 /* MapAPIController.m in Sources */ = {isa = PBXBuildFile; fileRef = E1AEEBE714CB505B00C14F98 /* MapAPIController.m */; };
 		E1AEEBEB14CB581A00C14F98 /* MapAPIResultParser.m in Sources */ = {isa = PBXBuildFile; fileRef = E1AEEBEA14CB581A00C14F98 /* MapAPIResultParser.m */; };
 		E1AEEBED14CB965100C14F98 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1AEEBEC14CB965100C14F98 /* AddressBook.framework */; };
+		E1F0342C14D45B04000F8BDE /* QuestDetailView.m in Sources */ = {isa = PBXBuildFile; fileRef = E1F0342B14D45B04000F8BDE /* QuestDetailView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -78,6 +79,8 @@
 		E1AEEBE914CB581A00C14F98 /* MapAPIResultParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapAPIResultParser.h; sourceTree = "<group>"; };
 		E1AEEBEA14CB581A00C14F98 /* MapAPIResultParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapAPIResultParser.m; sourceTree = "<group>"; };
 		E1AEEBEC14CB965100C14F98 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
+		E1F0342A14D45B04000F8BDE /* QuestDetailView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QuestDetailView.h; sourceTree = "<group>"; };
+		E1F0342B14D45B04000F8BDE /* QuestDetailView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QuestDetailView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,6 +128,8 @@
 				E1573B8414CCAC6A004AEF21 /* QuestCalloutView.m */,
 				E1573B7E14CC963D004AEF21 /* ShakeView.h */,
 				E1573B7F14CC963D004AEF21 /* ShakeView.m */,
+				E1F0342A14D45B04000F8BDE /* QuestDetailView.h */,
+				E1F0342B14D45B04000F8BDE /* QuestDetailView.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -329,6 +334,7 @@
 				E1573B7D14CC7CC8004AEF21 /* Quest.m in Sources */,
 				E1573B8014CC963D004AEF21 /* ShakeView.m in Sources */,
 				E1573B8514CCAC6A004AEF21 /* QuestCalloutView.m in Sources */,
+				E1F0342C14D45B04000F8BDE /* QuestDetailView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

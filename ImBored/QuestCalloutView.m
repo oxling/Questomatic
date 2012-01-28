@@ -13,10 +13,10 @@
 #define OFFSET 5
 #define RADIUS 10
 
-@interface LayerDelegate : NSObject
+@interface CalloutLayerDelegate : NSObject
 @end
 
-@implementation LayerDelegate
+@implementation CalloutLayerDelegate
 
 - (void)arcPath:(CGMutablePathRef)path aroundCorner:(CGPoint)corner toPoint:(CGPoint)point {
     CGPathAddArcToPoint(path, NULL, corner.x, corner.y, point.x, point.y, RADIUS);
@@ -110,10 +110,10 @@
 
 @implementation QuestCalloutView
 @synthesize subtitle, title, questString, htmlString;
-LayerDelegate * del;
+CalloutLayerDelegate * del;
 
 - (void) initVariables:(CGRect)frame {
-    del = [[LayerDelegate alloc] init];
+    del = [[CalloutLayerDelegate alloc] init];
     
     backgroundLayer = [[CALayer layer] retain];
     backgroundLayer.frame = frame;
