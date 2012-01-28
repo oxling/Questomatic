@@ -28,14 +28,32 @@
     CGContextDrawLinearGradient(ctx, grad1, 
                                 CGPointMake(CGRectGetMidX(layer.frame), 0), 
                                 CGPointMake(CGRectGetMidX(layer.frame), CGRectGetMaxY(layer.frame)),
-                                NULL);
+                                0);
     
-    CGContextClipToRect(ctx, CGRectMake(0, 0, CGRectGetWidth(layer.frame), CGRectGetMidY(layer.frame)));
+    CGFloat ellipseWidth = CGRectGetWidth(layer.frame)*1.5;
+    CGRect ellipseRect = CGRectMake(CGRectGetMidX(layer.frame) - ellipseWidth/2, 
+                                    -CGRectGetHeight(layer.frame)/2+10, 
+                                    ellipseWidth, 
+                                    CGRectGetHeight(layer.frame));
+    
+    CGContextSaveGState(ctx);
+    
+    CGContextAddEllipseInRect(ctx, ellipseRect);
+    CGContextClip(ctx);
     
     CGContextDrawLinearGradient(ctx, grad2, 
                                 CGPointMake(CGRectGetMidX(layer.frame), 0), 
                                 CGPointMake(CGRectGetMidX(layer.frame), CGRectGetMaxY(layer.frame)),
-                                NULL);
+                                0);
+    
+    CGContextRestoreGState(ctx);
+    
+    CGContextSetStrokeColorWithColor(ctx, [[UIColor whiteColor] CGColor]);
+    CGContextSetShadowWithColor(ctx, CGSizeMake(0.0, 0.0), 1.0, [[UIColor blackColor] CGColor]);
+    CGContextSetLineWidth(ctx, 2.0);
+    CGContextMoveToPoint(ctx, 0, CGRectGetMaxY(layer.frame)-1.5);
+    CGContextAddLineToPoint(ctx, CGRectGetMaxX(layer.frame), CGRectGetMaxY(layer.frame)-1.5);
+    CGContextStrokePath(ctx);
 
     CGColorSpaceRelease(cspace);
     CGGradientRelease(grad1);
@@ -53,8 +71,15 @@ DetailLayerDelegate * del;
         del = [[DetailLayerDelegate alloc] init];
         backgroundLayer = [[CALayer layer] retain];
         backgroundLayer.delegate = del;
+        backgroundLayer.frame = CGRectMake(0, 0, frame.size.width, frame.size.height-6);
+        backgroundLayer.shadowColor = [[UIColor blackColor] CGColor];
+        backgroundLayer.shadowOpacity = 1.0;
+        backgroundLayer.shadowOffset = CGSizeMake(0, 2);
+        backgroundLayer.shadowRadius = 3.0;
         
         [self.layer addSublayer:backgroundLayer];
+        
+        self.backgroundColor = [UIColor clearColor];
     }
     return self;
 }
@@ -67,6 +92,12 @@ DetailLayerDelegate * del;
 
 - (void)drawRect:(CGRect)rect {
     [backgroundLayer setNeedsDisplay];
+}
+
+- (void) setFrame:(CGRect)frame {
+    [super setFrame:frame];
+    [backgroundLayer setFrame:frame];
+    [self setNeedsDisplay];
 }
 
 @end
