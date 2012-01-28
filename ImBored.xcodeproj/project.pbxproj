@@ -52,7 +52,7 @@
 		E1573B8114CC9670004AEF21 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		E1573B8314CCAC6A004AEF21 /* QuestCalloutView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QuestCalloutView.h; sourceTree = "<group>"; };
 		E1573B8414CCAC6A004AEF21 /* QuestCalloutView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QuestCalloutView.m; sourceTree = "<group>"; };
-		E1AEEBA914CB382200C14F98 /* ImBored.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImBored.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E1AEEBA914CB382200C14F98 /* Questomatic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Questomatic.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1AEEBAD14CB382200C14F98 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		E1AEEBAF14CB382200C14F98 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		E1AEEBB114CB382200C14F98 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -142,7 +142,7 @@
 		E1AEEBAA14CB382200C14F98 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				E1AEEBA914CB382200C14F98 /* ImBored.app */,
+				E1AEEBA914CB382200C14F98 /* Questomatic.app */,
 				E1AEEBCA14CB382200C14F98 /* ImBoredTests.octest */,
 			);
 			name = Products;
@@ -230,7 +230,7 @@
 			);
 			name = ImBored;
 			productName = ImBored;
-			productReference = E1AEEBA914CB382200C14F98 /* ImBored.app */;
+			productReference = E1AEEBA914CB382200C14F98 /* Questomatic.app */;
 			productType = "com.apple.product-type.application";
 		};
 		E1AEEBC914CB382200C14F98 /* ImBoredTests */ = {
@@ -428,7 +428,7 @@
 				GCC_PREFIX_HEADER = "ImBored/ImBored-Prefix.pch";
 				INFOPLIST_FILE = "ImBored/ImBored-Info.plist";
 				OTHER_CFLAGS = "-DDEBUG";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Questomatic;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -439,7 +439,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ImBored/ImBored-Prefix.pch";
 				INFOPLIST_FILE = "ImBored/ImBored-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Questomatic;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

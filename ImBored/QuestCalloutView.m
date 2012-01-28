@@ -158,7 +158,6 @@ LayerDelegate * del;
     
     labelContainer = [[UIView alloc] initWithFrame:CGRectMake(left, OFFSET+5, width, containerHeight)];
     labelContainer.backgroundColor = [UIColor clearColor];
-    [self addSubview:labelContainer];
     
     [labelContainer addSubview:subtitleLabel];
     [labelContainer addSubview:titleLabel];
@@ -215,6 +214,8 @@ LayerDelegate * del;
     htmlView.frame = CGRectMake(OFFSET+5, CGRectGetMaxY(contentRect)-htmlSize, width, htmlSize);
     
     self.frame = CGRectMake(0, 0, 200, CGRectGetHeight(contentRect) + CARAT_SIZE + OFFSET*2);
+    
+    [self addSubview:labelContainer];
 }
 
 - (CGFloat) contentHeight {
@@ -295,8 +296,8 @@ LayerDelegate * del;
 
 - (void) setFrame:(CGRect)frame {
     [super setFrame:[self roundedFrame:frame]];
-    backgroundLayer.frame = [self roundedFrame:frame];
     
+    backgroundLayer.frame = [self roundedFrame:frame];
     [self setNeedsDisplay];
 }
 

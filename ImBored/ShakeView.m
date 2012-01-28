@@ -33,7 +33,7 @@
         label.textAlignment = UITextAlignmentCenter;
         label.font = [UIFont fontWithName:@"Helvetica" size:12.0];
         label.text = [self labelString];
-        label.layer.cornerRadius = 10.0;
+        label.layer.cornerRadius = 5.0;
         
         self.alpha = 0.0;
     }

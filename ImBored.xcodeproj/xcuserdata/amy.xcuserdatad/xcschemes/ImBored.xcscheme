@@ -14,7 +14,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "E1AEEBA814CB382200C14F98"
-               BuildableName = "ImBored.app"
+               BuildableName = "Questomatic.app"
                BlueprintName = "ImBored"
                ReferencedContainer = "container:ImBored.xcodeproj">
             </BuildableReference>
@@ -42,7 +42,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E1AEEBA814CB382200C14F98"
-            BuildableName = "ImBored.app"
+            BuildableName = "Questomatic.app"
             BlueprintName = "ImBored"
             ReferencedContainer = "container:ImBored.xcodeproj">
          </BuildableReference>
@@ -60,7 +60,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E1AEEBA814CB382200C14F98"
-            BuildableName = "ImBored.app"
+            BuildableName = "Questomatic.app"
             BlueprintName = "ImBored"
             ReferencedContainer = "container:ImBored.xcodeproj">
          </BuildableReference>
@@ -78,7 +78,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E1AEEBA814CB382200C14F98"
-            BuildableName = "ImBored.app"
+            BuildableName = "Questomatic.app"
             BlueprintName = "ImBored"
             ReferencedContainer = "container:ImBored.xcodeproj">
          </BuildableReference>
