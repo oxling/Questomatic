@@ -38,6 +38,10 @@
         return nil;
 }
 
++ (CGRect)roundFrame:(CGRect)rect {
+    return CGRectMake(roundf(rect.origin.x), roundf(rect.origin.y), roundf(roundf(rect.size.width)), roundf(rect.size.height));
+}
+
 
 
 @end

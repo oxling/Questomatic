@@ -14,6 +14,7 @@
 
 @optional
 - (void) didAcceptQuest:(id)quest inView:(QuestCalloutView *)view;
+- (void) didTapCalloutView:(QuestCalloutView *)view;
 
 @end
 
@@ -31,6 +32,8 @@
     
     NSString * htmlString;
     UIWebView * htmlView;
+    
+    UITapGestureRecognizer * tapper;
     
     id <QuestCalloutDelegate> delegate;
 }

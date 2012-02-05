@@ -12,5 +12,6 @@
 
 + (id) randomItem:(id) item, ... NS_REQUIRES_NIL_TERMINATION;
 + (NSString *) capitalizeString:(NSString *)str;
++ (CGRect) roundFrame:(CGRect)rect;
 
 @end

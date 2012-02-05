@@ -219,6 +219,8 @@ SmallLayerDelegate * del2;
     [labelContainer addSubview:questLabel];
     [labelContainer addSubview:htmlView];
     
+    tapper = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTap:)];
+    
     self.backgroundColor = [UIColor clearColor];
     
     if ([self isSelected]) {
@@ -246,6 +248,7 @@ SmallLayerDelegate * del2;
     [htmlView release];
     
     [acceptButton release];
+    [tapper release];
     
     [super dealloc];
 }
@@ -353,11 +356,13 @@ SmallLayerDelegate * del2;
     [super setSelected:selected];
     
     if (selected) {
+        [self addGestureRecognizer:tapper];
         [self addSubview:labelContainer];
         [self addSubview:acceptButton];
     }
     
-    else {        
+    else {
+        [self removeGestureRecognizer:tapper];
         [labelContainer removeFromSuperview];
         [acceptButton removeFromSuperview];
     }
@@ -442,6 +447,18 @@ SmallLayerDelegate * del2;
 - (void) didTapAccept {
     if ([delegate respondsToSelector:@selector(didAcceptQuest:inView:)]) {
         [delegate didAcceptQuest:self.annotation inView:self];
+    }
+}
+
+- (void) didTap:(UITapGestureRecognizer *)recognizer {
+    CGPoint p = [recognizer locationInView:acceptButton];
+    if ([acceptButton hitTest:p withEvent:UIEventTypeTouches]) {
+        //User actually tapped the button!
+        [self didTapAccept];
+    } else {
+        if ([delegate respondsToSelector:@selector(didTapCalloutView:)]) {
+            [delegate didTapCalloutView:self];
+        }
     }
 }
 

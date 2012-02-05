@@ -36,10 +36,11 @@ BOOL fireActivityTimer = NO;
     overlayView = [[UIView alloc] initWithFrame:self.view.frame];
     overlayView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     overlayView.backgroundColor = [UIColor blackColor];
-    overlayView.alpha = 0.35;
+    overlayView.alpha = 0.45;
         
     activityView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
     activityView.center = overlayView.center;
+    activityView.frame = [UtilityKit roundFrame:activityView.frame];
     activityView.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
     
     srand(time(NULL));
@@ -132,6 +133,10 @@ BOOL fireActivityTimer = NO;
     
     self.acceptedQuest = quest;
     view.acceptButton.enabled = NO;
+}
+
+- (void) didTapCalloutView:(QuestCalloutView *)view {
+    [map deselectAnnotation:view.annotation animated:YES];
 }
 
 #pragma mark - Map
