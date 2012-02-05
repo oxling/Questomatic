@@ -78,6 +78,7 @@ DetailLayerDelegate * del;
         backgroundLayer.shadowOpacity = 1.0;
         backgroundLayer.shadowOffset = CGSizeMake(0, 2);
         backgroundLayer.shadowRadius = 3.0;
+        [backgroundLayer setContentsScale:[self contentScaleFactor]];
         
         [self.layer addSublayer:backgroundLayer];
         self.backgroundColor = [UIColor clearColor];
@@ -102,8 +103,10 @@ DetailLayerDelegate * del;
 }
 
 - (void) dealloc {
+    backgroundLayer.delegate = nil;
     [del release];
     [backgroundLayer release];
+    
     [questLabel release];
     [titleLabel release];
     [super dealloc];

@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		E1573B7914CC79AE004AEF21 /* LocationController.m in Sources */ = {isa = PBXBuildFile; fileRef = E1573B7814CC79AE004AEF21 /* LocationController.m */; };
 		E1573B7D14CC7CC8004AEF21 /* Quest.m in Sources */ = {isa = PBXBuildFile; fileRef = E1573B7C14CC7CC8004AEF21 /* Quest.m */; };
-		E1573B8014CC963D004AEF21 /* ShakeView.m in Sources */ = {isa = PBXBuildFile; fileRef = E1573B7F14CC963D004AEF21 /* ShakeView.m */; };
+		E1573B8014CC963D004AEF21 /* InfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = E1573B7F14CC963D004AEF21 /* InfoView.m */; };
 		E1573B8214CC9670004AEF21 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1573B8114CC9670004AEF21 /* QuartzCore.framework */; };
 		E1573B8514CCAC6A004AEF21 /* QuestCalloutView.m in Sources */ = {isa = PBXBuildFile; fileRef = E1573B8414CCAC6A004AEF21 /* QuestCalloutView.m */; };
 		E18E574414DE17F300597734 /* UtilityKit.m in Sources */ = {isa = PBXBuildFile; fileRef = E18E574314DE17F300597734 /* UtilityKit.m */; };
@@ -49,8 +49,8 @@
 		E1573B7814CC79AE004AEF21 /* LocationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationController.m; sourceTree = "<group>"; };
 		E1573B7B14CC7CC8004AEF21 /* Quest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Quest.h; sourceTree = "<group>"; };
 		E1573B7C14CC7CC8004AEF21 /* Quest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Quest.m; sourceTree = "<group>"; };
-		E1573B7E14CC963D004AEF21 /* ShakeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShakeView.h; sourceTree = "<group>"; };
-		E1573B7F14CC963D004AEF21 /* ShakeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShakeView.m; sourceTree = "<group>"; };
+		E1573B7E14CC963D004AEF21 /* InfoView.h */ = {isa = PBXFileReference; fileEncoding = 4; path = InfoView.h; sourceTree = "<group>"; };
+		E1573B7F14CC963D004AEF21 /* InfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InfoView.m; sourceTree = "<group>"; };
 		E1573B8114CC9670004AEF21 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		E1573B8314CCAC6A004AEF21 /* QuestCalloutView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QuestCalloutView.h; sourceTree = "<group>"; };
 		E1573B8414CCAC6A004AEF21 /* QuestCalloutView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QuestCalloutView.m; sourceTree = "<group>"; };
@@ -129,8 +129,8 @@
 			children = (
 				E1573B8314CCAC6A004AEF21 /* QuestCalloutView.h */,
 				E1573B8414CCAC6A004AEF21 /* QuestCalloutView.m */,
-				E1573B7E14CC963D004AEF21 /* ShakeView.h */,
-				E1573B7F14CC963D004AEF21 /* ShakeView.m */,
+				E1573B7E14CC963D004AEF21 /* InfoView.h */,
+				E1573B7F14CC963D004AEF21 /* InfoView.m */,
 				E1F0342A14D45B04000F8BDE /* QuestDetailView.h */,
 				E1F0342B14D45B04000F8BDE /* QuestDetailView.m */,
 			);
@@ -337,7 +337,7 @@
 				E1AEEBEB14CB581A00C14F98 /* MapAPIResultParser.m in Sources */,
 				E1573B7914CC79AE004AEF21 /* LocationController.m in Sources */,
 				E1573B7D14CC7CC8004AEF21 /* Quest.m in Sources */,
-				E1573B8014CC963D004AEF21 /* ShakeView.m in Sources */,
+				E1573B8014CC963D004AEF21 /* InfoView.m in Sources */,
 				E1573B8514CCAC6A004AEF21 /* QuestCalloutView.m in Sources */,
 				E1F0342C14D45B04000F8BDE /* QuestDetailView.m in Sources */,
 				E18E574414DE17F300597734 /* UtilityKit.m in Sources */,

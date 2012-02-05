@@ -121,7 +121,7 @@
     
     CGRect shineRect = CGRectMake(shineX, shineY, shineWidth, shineHeight);
     CGPathRef shinePath = CGPathCreateWithEllipseInRect(shineRect, NULL);
-    CGContextSetShadowWithColor(ctx, CGSizeMake(1.0, 1.0), 5.0, [[UIColor blackColor] CGColor]);
+    CGContextSetShadowWithColor(ctx, CGSizeMake(0, 0), 10.0, [[UIColor blackColor] CGColor]);
     
     CGContextBeginTransparencyLayer(ctx, NULL);
     
@@ -158,17 +158,19 @@
 CalloutLayerDelegate * del1;
 SmallLayerDelegate * del2;
 
-- (void) initVariables:(CGRect)frame {
+- (void) initVariables:(CGRect)frame {    
     del1 = [[CalloutLayerDelegate alloc] init];
     del2 = [[SmallLayerDelegate alloc] init];
     
     backgroundLayer = [[CALayer layer] retain];
     backgroundLayer.frame = frame;
     backgroundLayer.delegate = del1;
+    [backgroundLayer setContentsScale:[self contentScaleFactor]];
     
     smallLayer = [[CALayer layer] retain];
     smallLayer.frame = frame;
     smallLayer.delegate = del2;
+    [smallLayer setContentsScale:[self contentScaleFactor]];
     
     self.backgroundColor = [UIColor clearColor];
     
@@ -234,8 +236,14 @@ SmallLayerDelegate * del2;
 }
 
 - (void) dealloc {
+    backgroundLayer.delegate = nil;
+    smallLayer.delegate = nil;
+    
+    [self removeGestureRecognizer:tapper];
+    
     [del1 release];
     [del2 release];
+    
     [backgroundLayer release];
     [smallLayer release];
     
@@ -248,6 +256,7 @@ SmallLayerDelegate * del2;
     [htmlView release];
     
     [acceptButton release];
+    
     [tapper release];
     
     [super dealloc];
