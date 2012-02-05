@@ -38,5 +38,7 @@
 @property (nonatomic, readonly) NSMutableArray * types;
 @property (nonatomic, readonly) NSMutableString * listings;
 
+- (NSString *) getVerb;
+
 @end
 

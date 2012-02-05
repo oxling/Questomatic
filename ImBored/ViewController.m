@@ -16,6 +16,7 @@
 #import "MapAPIController.h"
 #import "LocationController.h"
 #import "QuestCalloutView.h"
+#import "QuestDetailView.h"
 
 @implementation ViewController
 @synthesize map, currentPoint, userLocation;
@@ -27,6 +28,8 @@ BOOL fireActivityTimer;
     shakeView = [[ShakeView alloc] initWithFrame:CGRectMake(0, 0, 176, 126)];
     shakeView.center = self.view.center;
     shakeView.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin;
+    
+    detailView = [[QuestDetailView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 50)];
     
     srand(time(NULL));
 }
@@ -53,6 +56,7 @@ BOOL fireActivityTimer;
     [locationController release];
     [userLocation release];
     [shakeView release];
+    [detailView release];
     
     [super dealloc];
 }
@@ -65,7 +69,7 @@ BOOL fireActivityTimer;
         actionTimer = nil;
     
         [shakeView animateRemoveFromSuperView];
-        actionTimer = [NSTimer scheduledTimerWithTimeInterval:20.0 target:self selector:@selector(noActivity) userInfo:nil repeats:NO];
+        actionTimer = [NSTimer scheduledTimerWithTimeInterval:30.0 target:self selector:@selector(noActivity) userInfo:nil repeats:NO];
     }
 }
 
@@ -89,20 +93,16 @@ BOOL fireActivityTimer;
 
 #pragma mark - Map
 
-QuestCalloutView * c;
-
 - (void)mapView:(MKMapView *)mapView regionWillChangeAnimated:(BOOL)animated {
     [self activityOccured];
 }
 
 - (void) mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view {
     [self activityOccured];
-    
 }
 
 - (void) mapView:(MKMapView *)mapView didDeselectAnnotationView:(MKAnnotationView *)view {
     [self activityOccured];
-    [c removeFromSuperview];
 }
 
 - (void) mapViewWillStartLoadingMap:(MKMapView *)mapView {
@@ -117,94 +117,6 @@ QuestCalloutView * c;
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
 }
 
-- (id) randomItem:(id) item, ... {
-    NSMutableArray * array = [NSMutableArray array];
-    
-    va_list args;
-    va_start(args, item);
-    for (id arg = item; arg != nil; arg = va_arg(args, id)) {
-        [array addObject:arg];
-    }
-    va_end(args);
-
-    
-    int indx = rand() % [array count];
-    
-    NSAssert(indx < [array count], @"Random index %i out of bounds for array %@", indx, array);
-    
-    return [array objectAtIndex:indx];
-}
-
-- (NSString *) verbForType:(NSString *)type {
-    
-    if ([type isEqualToString:@"grocery_or_supermarket"]) {
-        return @"buy a snack at";
-    }
-    
-    if ([type isEqualToString:@"cafe"]) {
-        return @"drink coffee at";
-    }
-    
-    if ([type isEqualToString:@"restaurant"] ||
-        [type isEqualToString:@"bakery"]) {
-        
-        return @"eat at";
-    }
-    
-    if ([type isEqualToString:@"library"]) {
-        return @"read a book at";
-    }
-    
-    if ([type isEqualToString:@"bar"] ||
-        [type isEqualToString:@"night_club"]) {
-        return [self randomItem:@"drink at", @"dance at", nil];
-    }
-    
-    if ([type isEqualToString:@"store"]) {
-        return [self randomItem:@"shop at", @"buy something at", nil];
-    }
-        
-    if ([type isEqualToString:@"gym"]) {
-        return @"work out at";
-    }
-    
-    if ([type isEqualToString:@"salon"]) {
-        return [self randomItem:@"get a haircut at", @"dye your hair at", nil];
-    }
-    
-    if ([type isEqualToString:@"movie_theater"]) {
-        return @"see a movie at";
-    }
-    
-    if ([type isEqualToString:@"natural_feature"] ||
-        [type isEqualToString:@"point_of_interest"]) {
-        return [self randomItem:@"see", @"take a picture of", @"admire", nil];
-    }
-    
-    if ([type isEqualToString:@"water"]) {
-        return [self randomItem:@"swim in the", @"sail on the", @"fish in the", @"drink from the", nil];
-    }
-    
-    if ([type isEqualToString:@"spa"]) {
-        return @"relax at";
-    }
-    
-    else return nil;
-}
-
-- (NSString *) getVerbForQuest:(Quest *)q {
-    NSString * verb = [self randomItem:@"visit", @"see", @"go to", nil];
-    for (NSString * type in q.types) {
-        NSString * newVerb = [self verbForType:type];
-        if (newVerb) {
-            verb = newVerb;
-            break;
-        }
-    }
-    
-    return verb;
-}
-
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation {
     if (annotation == self.currentPoint) {
         static NSString * const identifer = @"mapview_id_quest";
@@ -213,14 +125,16 @@ QuestCalloutView * c;
             pin = [[[QuestCalloutView alloc] initWithAnnotation:annotation reuseIdentifier:identifer] autorelease];
         }
         
+        Quest * q = (Quest *)annotation;
+        
         pin.annotation = annotation;
-        pin.title = [annotation title];
-        pin.subtitle = [annotation subtitle];
-        pin.questString = [self getVerbForQuest:(Quest *)annotation];
-        pin.htmlString = [(Quest *)annotation listings];
+        pin.title = q.title;
+        pin.subtitle = q.subtitle;
+        pin.questString = [NSString stringWithFormat:@"Your quest is to %@", [q getVerb]];
+        pin.htmlString = [q listings];
         
         [pin updateFrameAndLabels];
-                
+        
         return pin;
     } else return nil;
 }
@@ -260,7 +174,6 @@ QuestCalloutView * c;
                                       }
                                       
                                       [map setCenterCoordinate:[self.currentPoint coordinate] animated:YES];
-                                      [map setSelectedAnnotations:[NSArray arrayWithObject:self.currentPoint]];
                                       
                                       button.enabled = YES;
                                       [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];

@@ -10,6 +10,11 @@
 
 @interface QuestDetailView : UIView {
     CALayer * backgroundLayer;
+    UILabel * questLabel;
+    UILabel * titleLabel;
 }
+@property (nonatomic, retain) NSString * titleString;
+@property (nonatomic, retain) NSString * questString;
+
 
 @end

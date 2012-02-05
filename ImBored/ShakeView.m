@@ -32,7 +32,7 @@
         label.shadowOffset = CGSizeMake(1, 1);
         label.numberOfLines = 0;
         label.textAlignment = UITextAlignmentCenter;
-        label.font = [UIFont fontWithName:@"Helvetica" size:14.0];
+        label.font = [UIFont fontWithName:@"Helvetica" size:13.0];
         label.text = [self labelString];
         
         label.layer.cornerRadius = 10.0;

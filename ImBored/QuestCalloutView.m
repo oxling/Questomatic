@@ -163,7 +163,23 @@ CalloutLayerDelegate * del;
     [labelContainer addSubview:titleLabel];
     [labelContainer addSubview:questLabel];
     
+    self.backgroundColor = [UIColor clearColor];
+    
 }
+
+- (void) dealloc {
+    [del release];
+    [backgroundLayer release];
+    [subtitleLabel release];
+    [titleLabel release];
+    [questLabel release];
+    [labelContainer release];
+    [htmlString release];
+    [htmlView release];
+    
+    [super dealloc];
+}
+
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -223,7 +239,7 @@ CalloutLayerDelegate * del;
 }
 
 - (void) setQuestString:(NSString *)newQuestString {
-    questLabel.text = [NSString stringWithFormat:@"Your quest is to %@", newQuestString];
+    questLabel.text = newQuestString;
 }
 
 - (void) setTitle:(NSString *)newTitle {
@@ -232,6 +248,28 @@ CalloutLayerDelegate * del;
 
 - (void) setSubtitle:(NSString *)newSubtitle {
     subtitleLabel.text = newSubtitle;
+}
+
+- (void) setSelected:(BOOL)selected {
+    [super setSelected:selected];
+/*    
+    if (selected) {
+        self.backgroundColor = [UIColor clearColor];
+        [self becomeFirstResponder];
+    }
+    else {
+        self.backgroundColor = [UIColor redColor];
+        [self resignFirstResponder];
+    }
+    */
+}
+
+- (BOOL) canBecomeFirstResponder {
+    return YES;
+}
+
+- (void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    self.selected = YES;
 }
 
 - (void) setHtmlString:(NSString *)newHtmlString {
@@ -299,19 +337,6 @@ CalloutLayerDelegate * del;
     
     backgroundLayer.frame = [self roundedFrame:frame];
     [self setNeedsDisplay];
-}
-
-- (void) dealloc {
-    [del release];
-    [backgroundLayer release];
-    [subtitleLabel release];
-    [titleLabel release];
-    [questLabel release];
-    [labelContainer release];
-    [htmlString release];
-    [htmlView release];
-    
-    [super dealloc];
 }
 
 - (void)drawRect:(CGRect)rect {

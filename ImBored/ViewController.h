@@ -17,6 +17,7 @@
 #import "Quest.h"
 
 #import "ShakeView.h"
+#import "QuestDetailView.h"
 
 @interface ViewController : UIViewController <MKMapViewDelegate, UIActionSheetDelegate> {
     MKMapView * map;
@@ -27,6 +28,7 @@
     
     LocationController * locationController;
     ShakeView * shakeView;
+    QuestDetailView * detailView;
     
     NSTimer * actionTimer;
 }

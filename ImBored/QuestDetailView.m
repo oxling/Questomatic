@@ -9,6 +9,8 @@
 #import "QuestDetailView.h"
 #import <QuartzCore/QuartzCore.h>
 
+#define SHADOWSPACE 6
+
 @interface DetailLayerDelegate : NSObject
 @end
 
@@ -71,15 +73,30 @@ DetailLayerDelegate * del;
         del = [[DetailLayerDelegate alloc] init];
         backgroundLayer = [[CALayer layer] retain];
         backgroundLayer.delegate = del;
-        backgroundLayer.frame = CGRectMake(0, 0, frame.size.width, frame.size.height-6);
+        backgroundLayer.frame = CGRectMake(0, 0, frame.size.width, frame.size.height-SHADOWSPACE);
         backgroundLayer.shadowColor = [[UIColor blackColor] CGColor];
         backgroundLayer.shadowOpacity = 1.0;
         backgroundLayer.shadowOffset = CGSizeMake(0, 2);
         backgroundLayer.shadowRadius = 3.0;
         
         [self.layer addSublayer:backgroundLayer];
-        
         self.backgroundColor = [UIColor clearColor];
+        
+        questLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 0, frame.size.width-10, 17)];
+        questLabel.backgroundColor = [UIColor clearColor];
+        questLabel.font = [UIFont fontWithName:@"Helvetica" size:12.0];
+        questLabel.textColor = [UIColor whiteColor];
+        questLabel.textAlignment = UITextAlignmentCenter;
+        questLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        
+        titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 18, frame.size.width-10, frame.size.height-17)];
+        titleLabel.backgroundColor = [UIColor clearColor];
+        titleLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:16.0];
+        titleLabel.textColor = [UIColor whiteColor];
+        titleLabel.textAlignment = UITextAlignmentCenter;
+        titleLabel.numberOfLines = 0;
+        titleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+
     }
     return self;
 }
@@ -87,7 +104,23 @@ DetailLayerDelegate * del;
 - (void) dealloc {
     [del release];
     [backgroundLayer release];
+    [questLabel release];
+    [titleLabel release];
     [super dealloc];
+}
+
+- (void) updateFrameWithWidth:(CGFloat)width {
+    CGSize titleSize = [titleLabel.text sizeWithFont:titleLabel.font constrainedToSize:CGSizeMake(width-10, 200) lineBreakMode:UILineBreakModeWordWrap];
+    
+    CGRect frame = CGRectMake(0, 0, width, titleSize.height+17+SHADOWSPACE);
+    [super setFrame:frame];
+    [backgroundLayer setFrame:frame];
+    [self setNeedsDisplay];
+    
+    titleLabel.frame = CGRectMake(5, 18, width-10, titleSize.height);
+    
+    [self addSubview:titleLabel];
+    [self addSubview:questLabel];
 }
 
 - (void)drawRect:(CGRect)rect {
@@ -95,9 +128,24 @@ DetailLayerDelegate * del;
 }
 
 - (void) setFrame:(CGRect)frame {
-    [super setFrame:frame];
-    [backgroundLayer setFrame:frame];
-    [self setNeedsDisplay];
+    [self updateFrameWithWidth:frame.size.width];
+}
+
+- (void) setQuestString:(NSString *)newQuestString {
+    questLabel.text = newQuestString;
+}
+
+- (void) setTitleString:(NSString *)newTitleString {
+    titleLabel.text = newTitleString;
+    [self updateFrameWithWidth:self.frame.size.width];
+}
+
+- (NSString *) titleString {
+    return titleLabel.text;
+}
+
+- (NSString *) questString {
+    return questLabel.text;
 }
 
 @end
