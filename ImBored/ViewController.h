@@ -18,13 +18,15 @@
 
 #import "ShakeView.h"
 #import "QuestDetailView.h"
+#import "QuestCalloutView.h"
 
-@interface ViewController : UIViewController <MKMapViewDelegate, UIActionSheetDelegate> {
+@interface ViewController : UIViewController <MKMapViewDelegate, UIActionSheetDelegate, QuestCalloutDelegate> {
     MKMapView * map;
     UIButton * button;
     
-    Quest * currentPoint;
+    Quest * visibleQuest;
     Quest * userLocation;
+    Quest * acceptedQuest;
     
     LocationController * locationController;
     ShakeView * shakeView;
@@ -33,9 +35,10 @@
     NSTimer * actionTimer;
 }
 @property (nonatomic, retain) IBOutlet MKMapView * map;
-@property (nonatomic, retain) Quest * currentPoint;
+@property (nonatomic, retain) Quest * visibleQuest;
 @property (nonatomic, retain) Quest * userLocation;
+@property (nonatomic, retain) Quest * acceptedQuest;
 
-- (id) randomItem:(id)item, ... NS_REQUIRES_NIL_TERMINATION;
+- (void) didTapRandom;
 
 @end

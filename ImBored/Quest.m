@@ -24,6 +24,20 @@
     return self;
 }
 
+- (void) dealloc{
+    [title release];
+    [subtitle release];
+    [latitude release];
+    [longitude release];
+    [name release];
+    [address release];
+    [types release];
+    [listings release];
+    [verb release];
+    
+    [super dealloc];
+}
+
 - (CLLocationCoordinate2D) coordinate {
     if (coordinate.latitude !=  0 && coordinate.longitude != 0) {
         return coordinate;
@@ -54,24 +68,6 @@
     } else return subtitle;
 }
 
-- (id) randomItem:(id) item, ... {
-    NSMutableArray * array = [NSMutableArray array];
-    
-    va_list args;
-    va_start(args, item);
-    for (id arg = item; arg != nil; arg = va_arg(args, id)) {
-        [array addObject:arg];
-    }
-    va_end(args);
-    
-    
-    int indx = rand() % [array count];
-    
-    NSAssert(indx < [array count], @"Random index %i out of bounds for array %@", indx, array);
-    
-    return [array objectAtIndex:indx];
-}
-
 - (NSString *) verbForType:(NSString *)type {
     
     if ([type isEqualToString:@"grocery_or_supermarket"]) {
@@ -94,11 +90,11 @@
     
     if ([type isEqualToString:@"bar"] ||
         [type isEqualToString:@"night_club"]) {
-        return [self randomItem:@"drink at", @"dance at", nil];
+        return [UtilityKit randomItem:@"drink at", @"dance at", nil];
     }
     
     if ([type isEqualToString:@"store"]) {
-        return [self randomItem:@"shop at", @"buy something at", nil];
+        return [UtilityKit randomItem:@"shop at", @"buy something at", nil];
     }
     
     if ([type isEqualToString:@"gym"]) {
@@ -106,7 +102,7 @@
     }
     
     if ([type isEqualToString:@"salon"]) {
-        return [self randomItem:@"get a haircut at", @"dye your hair at", nil];
+        return [UtilityKit randomItem:@"get a haircut at", @"dye your hair at", nil];
     }
     
     if ([type isEqualToString:@"movie_theater"]) {
@@ -115,11 +111,11 @@
     
     if ([type isEqualToString:@"natural_feature"] ||
         [type isEqualToString:@"point_of_interest"]) {
-        return [self randomItem:@"see", @"take a picture of", @"admire", nil];
+        return [UtilityKit randomItem:@"see", @"take a picture of", @"admire", nil];
     }
     
     if ([type isEqualToString:@"water"]) {
-        return [self randomItem:@"swim in the", @"sail on the", @"fish in the", @"drink from the", nil];
+        return [UtilityKit randomItem:@"swim in the", @"sail on the", @"fish in the", @"drink from the", nil];
     }
     
     if ([type isEqualToString:@"spa"]) {
@@ -130,7 +126,10 @@
 }
 
 - (NSString *) getVerb {
-    NSString * verb = [self randomItem:@"visit", @"see", @"go to", nil];
+    if (verb) return verb;
+    
+    
+    verb = [UtilityKit randomItem:@"visit", @"see", @"go to", nil];
     for (NSString * type in types) {
         NSString * newVerb = [self verbForType:type];
         if (newVerb) {
@@ -139,20 +138,8 @@
         }
     }
     
+    [verb retain];    
     return verb;
-}
-
-- (void) dealloc{
-    [title release];
-    [subtitle release];
-    [latitude release];
-    [longitude release];
-    [name release];
-    [address release];
-    [types release];
-    [listings release];
-    
-    [super dealloc];
 }
 
 @end

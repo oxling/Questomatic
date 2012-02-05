@@ -19,7 +19,7 @@
 #import "QuestDetailView.h"
 
 @implementation ViewController
-@synthesize map, currentPoint, userLocation;
+@synthesize map, visibleQuest, userLocation, acceptedQuest;
 
 BOOL fireActivityTimer;
 
@@ -30,6 +30,7 @@ BOOL fireActivityTimer;
     shakeView.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin;
     
     detailView = [[QuestDetailView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 50)];
+    detailView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     
     srand(time(NULL));
 }
@@ -52,11 +53,12 @@ BOOL fireActivityTimer;
 
 - (void) dealloc{
     [map release];
-    [currentPoint release];
+    [visibleQuest release];
     [locationController release];
     [userLocation release];
     [shakeView release];
     [detailView release];
+    [acceptedQuest release];
     
     [super dealloc];
 }
@@ -82,13 +84,36 @@ BOOL fireActivityTimer;
 
 - (void) motionEnded:(UIEventSubtype)motion withEvent:(UIEvent *)event {
     if (event.subtype == UIEventSubtypeMotionShake) {
-        [self didTapRandom:nil];
+        [self didTapRandom];
         [self activityOccured];
     }
 }
 
 - (BOOL) canBecomeFirstResponder {
     return YES;
+}
+
+#pragma mark - Accept quest
+- (void) setAcceptedQuest:(Quest *)newAcceptedQuest {
+    if (newAcceptedQuest == acceptedQuest)
+        return;
+    
+    [acceptedQuest release];
+    acceptedQuest = [newAcceptedQuest retain];
+    
+    if (acceptedQuest) {
+        [self.view addSubview:detailView];
+        [detailView setQuest:[NSString stringWithFormat:@"Your quest is to %@", [acceptedQuest getVerb]] withTitle:acceptedQuest.title];
+    } else {
+        [detailView removeFromSuperview];
+    }
+}
+
+- (void) didAcceptQuest:(id)quest inView:(QuestCalloutView *)view {
+    NSAssert([quest isKindOfClass:[Quest class]], @"Annotation %@ must be of class Quest", quest);
+    
+    self.acceptedQuest = quest;
+    view.acceptButton.enabled = NO;
 }
 
 #pragma mark - Map
@@ -118,7 +143,7 @@ BOOL fireActivityTimer;
 }
 
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation {
-    if (annotation == self.currentPoint) {
+    if (annotation == self.visibleQuest) {
         static NSString * const identifer = @"mapview_id_quest";
         QuestCalloutView * pin = (QuestCalloutView *) [mapView dequeueReusableAnnotationViewWithIdentifier:identifer];
         if (!pin) {
@@ -130,8 +155,10 @@ BOOL fireActivityTimer;
         pin.annotation = annotation;
         pin.title = q.title;
         pin.subtitle = q.subtitle;
-        pin.questString = [NSString stringWithFormat:@"Your quest is to %@", [q getVerb]];
+        pin.questString = [UtilityKit capitalizeString:[q getVerb]];
         pin.htmlString = [q listings];
+        pin.delegate = self;
+        pin.acceptButton.enabled = YES;
         
         [pin updateFrameAndLabels];
         
@@ -149,7 +176,7 @@ BOOL fireActivityTimer;
     if (buttonIndex == [actionSheet cancelButtonIndex]) {
         return;
     } else {
-        CLLocationCoordinate2D newCoord = [self.currentPoint coordinate];
+        CLLocationCoordinate2D newCoord = [self.visibleQuest coordinate];
         CLLocationCoordinate2D oldCoord = [map.userLocation coordinate];
         NSString * urlStr = [NSString stringWithFormat:@"http://maps.google.com/?saddr=%f,%f&daddr=%f,%f", 
                              oldCoord.latitude, oldCoord.longitude,
@@ -165,29 +192,29 @@ BOOL fireActivityTimer;
                              latitudeRange:map.region.span.latitudeDelta/2
                             longitudeRange:map.region.span.longitudeDelta/2
                                   complete:^(Quest *location) {
-                                      if (self.currentPoint)
-                                          [map removeAnnotation:self.currentPoint];
+                                      if (self.visibleQuest)
+                                          [map removeAnnotation:self.visibleQuest];
                                       
                                       if (location) {                    
                                           [map addAnnotation:location];
-                                          self.currentPoint = location;
+                                          self.visibleQuest = location;
                                       }
                                       
-                                      [map setCenterCoordinate:[self.currentPoint coordinate] animated:YES];
-                                      
+                                      [map setCenterCoordinate:[self.visibleQuest coordinate] animated:YES];
+                                      [map selectAnnotation:self.visibleQuest animated:NO];
                                       button.enabled = YES;
                                       [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
 
                                   }];        
 }
 
-- (void) didTapRandom:(id)sender {
+- (void) didTapRandom {
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     button.enabled = NO;
     [self generateRandomLocation];
 }
 
-
+#pragma mark - View management
 
 - (void)viewDidAppear:(BOOL)animated
 {

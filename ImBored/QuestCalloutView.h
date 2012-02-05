@@ -9,25 +9,42 @@
 #import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
 #import <MapKit/MapKit.h>
+@class QuestCalloutView;
+@protocol QuestCalloutDelegate <NSObject>
+
+@optional
+- (void) didAcceptQuest:(id)quest inView:(QuestCalloutView *)view;
+
+@end
 
 @interface QuestCalloutView : MKAnnotationView <UIWebViewDelegate> {
     CALayer * backgroundLayer;
+    CALayer * smallLayer;
+    
     UILabel * titleLabel;
     UILabel * subtitleLabel;
     UILabel * questLabel;
+    
+    UIButton * acceptButton;
     
     UIView * labelContainer;
     
     NSString * htmlString;
     UIWebView * htmlView;
+    
+    id <QuestCalloutDelegate> delegate;
 }
+
+@property (nonatomic, readonly) UIButton * acceptButton;
 
 @property (nonatomic, retain) NSString * title;
 @property (nonatomic, retain) NSString * subtitle;
 @property (nonatomic, retain) NSString * questString;
 @property (nonatomic, retain) NSString * htmlString;
+@property (nonatomic, assign) id <QuestCalloutDelegate> delegate;
 
 - (void) updateFrameAndLabels;
 - (CGFloat) contentHeight;
+- (void) didTapAccept;
 
 @end
