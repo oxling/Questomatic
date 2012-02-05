@@ -9,11 +9,11 @@
 #import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
 #import <MapKit/MapKit.h>
-
+@class QuestCalloutView;
 @protocol QuestCalloutDelegate <NSObject>
 
 @optional
-- (void) didAcceptQuest:(id) quest;
+- (void) didAcceptQuest:(id)quest inView:(QuestCalloutView *)view;
 
 @end
 
@@ -34,6 +34,8 @@
     
     id <QuestCalloutDelegate> delegate;
 }
+
+@property (nonatomic, readonly) UIButton * acceptButton;
 
 @property (nonatomic, retain) NSString * title;
 @property (nonatomic, retain) NSString * subtitle;

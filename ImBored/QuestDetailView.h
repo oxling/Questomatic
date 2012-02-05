@@ -13,8 +13,8 @@
     UILabel * questLabel;
     UILabel * titleLabel;
 }
-@property (nonatomic, retain) NSString * titleString;
-@property (nonatomic, retain) NSString * questString;
+
+- (void) setQuest:(NSString *)questString withTitle:(NSString *)titleString;
 
 
 @end

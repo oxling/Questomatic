@@ -103,21 +103,17 @@ BOOL fireActivityTimer;
     
     if (acceptedQuest) {
         [self.view addSubview:detailView];
-        detailView.titleString = acceptedQuest.title;
-        detailView.questString = [NSString stringWithFormat:@"Your quest is to %@", [acceptedQuest getVerb]];
+        [detailView setQuest:[NSString stringWithFormat:@"Your quest is to %@", [acceptedQuest getVerb]] withTitle:acceptedQuest.title];
     } else {
         [detailView removeFromSuperview];
     }
 }
 
-- (void) didRejectQuest:(id)quest {
-    NSAssert([quest isKindOfClass:[Quest class]], @"Annotation %@ must be of class Quest", quest);
-}
-
-- (void) didAcceptQuest:(id)quest {
+- (void) didAcceptQuest:(id)quest inView:(QuestCalloutView *)view {
     NSAssert([quest isKindOfClass:[Quest class]], @"Annotation %@ must be of class Quest", quest);
     
     self.acceptedQuest = quest;
+    view.acceptButton.enabled = NO;
 }
 
 #pragma mark - Map
@@ -162,6 +158,7 @@ BOOL fireActivityTimer;
         pin.questString = [UtilityKit capitalizeString:[q getVerb]];
         pin.htmlString = [q listings];
         pin.delegate = self;
+        pin.acceptButton.enabled = YES;
         
         [pin updateFrameAndLabels];
         
@@ -200,12 +197,11 @@ BOOL fireActivityTimer;
                                       
                                       if (location) {                    
                                           [map addAnnotation:location];
-                                          [map selectAnnotation:location animated:YES];
                                           self.visibleQuest = location;
                                       }
                                       
                                       [map setCenterCoordinate:[self.visibleQuest coordinate] animated:YES];
-                                      
+                                      [map selectAnnotation:self.visibleQuest animated:NO];
                                       button.enabled = YES;
                                       [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
 

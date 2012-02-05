@@ -26,10 +26,32 @@
     CGPoint bottomTip = CGPointMake(CGRectGetMidX(frame), CGRectGetMaxY(frame));
     
     CGContextSetShadowWithColor(ctx, CGSizeMake(0, 0), 5, [[UIColor blackColor] CGColor]);
+    CGRect ellipseRect = CGRectMake(bottomTip.x-CARAT_OFFSET, bottomTip.y-CARAT_OFFSET*2-3, CARAT_OFFSET*2, CARAT_OFFSET*2);
     
-    CGContextAddEllipseInRect(ctx, CGRectMake(bottomTip.x-10, bottomTip.y-20, 20, 20));
+    CGContextAddEllipseInRect(ctx, ellipseRect);
     CGContextSetFillColorWithColor(ctx, [[UIColor whiteColor] CGColor]);
     CGContextFillPath(ctx);
+    
+    const CGFloat gradCompsBlue[8] = {0.3, 0.40, 0.50, 1.0, 
+        0.10,  0.20, 0.35, 1.0};
+    const CGFloat gradLocs[2] = {1.0, 0.0};
+    
+    CGColorSpaceRef cspace = CGColorSpaceCreateDeviceRGB();
+    CGGradientRef grad1 = CGGradientCreateWithColorComponents(cspace, gradCompsBlue, gradLocs, 2);
+    
+    CGPoint center = CGPointMake(bottomTip.x, bottomTip.y-CARAT_OFFSET-3);
+    CGFloat radius = 20;
+    
+    CGContextRestoreGState(ctx);
+    
+    CGContextSaveGState(ctx);
+    CGContextAddEllipseInRect(ctx, CGRectInset(ellipseRect, 2, 2));
+    CGContextClip(ctx);
+    CGContextDrawRadialGradient(ctx, grad1, center, radius, center, 0, 0);
+    
+    
+    CGColorSpaceRelease(cspace);
+    CGGradientRelease(grad1);
     
     CGContextRestoreGState(ctx);
 }
@@ -132,7 +154,7 @@
 @end
 
 @implementation QuestCalloutView
-@synthesize subtitle, title, questString, htmlString, delegate;
+@synthesize subtitle, title, questString, htmlString, delegate, acceptButton;
 CalloutLayerDelegate * del1;
 SmallLayerDelegate * del2;
 
@@ -147,8 +169,6 @@ SmallLayerDelegate * del2;
     smallLayer = [[CALayer layer] retain];
     smallLayer.frame = frame;
     smallLayer.delegate = del2;
-    
-    [self.layer addSublayer:backgroundLayer];
     
     self.backgroundColor = [UIColor clearColor];
     
@@ -183,9 +203,10 @@ SmallLayerDelegate * del2;
     subtitleLabel.shadowColor = [UIColor darkGrayColor];
     subtitleLabel.textAlignment = UITextAlignmentCenter;
         
-    acceptButton = [[UIButton alloc] initWithFrame:CGRectZero];
-    acceptButton.titleLabel.text = @"Accept";
-    acceptButton.backgroundColor = [UIColor blackColor];
+    acceptButton = [[UIButton buttonWithType:UIButtonTypeRoundedRect] retain];
+    [acceptButton setTitle:@"Accept Quest" forState:UIControlStateNormal];
+    [acceptButton setTitle:@"Accepted" forState:UIControlStateDisabled];
+    acceptButton.titleLabel.textColor = [UIColor darkGrayColor];
     [acceptButton addTarget:self action:@selector(didTapAccept) forControlEvents:UIControlEventTouchUpInside];
     
     CGFloat containerHeight = questLabel.frame.size.height+titleLabel.frame.size.height+subtitleLabel.frame.size.height;
@@ -198,9 +219,15 @@ SmallLayerDelegate * del2;
     [labelContainer addSubview:questLabel];
     [labelContainer addSubview:htmlView];
     
-    [self addSubview:acceptButton];
-    
     self.backgroundColor = [UIColor clearColor];
+    
+    if ([self isSelected]) {
+        [self.layer addSublayer:backgroundLayer];
+        [self addSubview:labelContainer];
+        [self addSubview:acceptButton];
+    } else {
+        [self.layer addSublayer:smallLayer];
+    }
     
 }
 
@@ -256,26 +283,28 @@ SmallLayerDelegate * del2;
     
     CGFloat htmlSize = htmlView ? 18 : 0;
     
-    CGFloat contentSize = roundf(subtitleSize.height + questSize.height + titleSize.height + htmlSize + 50 - OFFSET*2);
+    CGFloat contentSize = roundf(subtitleSize.height + questSize.height + titleSize.height + htmlSize + 70 - OFFSET*2);
     CGRect contentRect = CGRectMake(OFFSET*2, OFFSET, 200-OFFSET*4, contentSize);
     
-    CGFloat labelTotal = questSize.height+titleSize.height+subtitleSize.height;
+    CGFloat labelTotal = questSize.height+titleSize.height+subtitleSize.height+htmlSize;
     labelContainer.frame = CGRectMake(roundf(CGRectGetMidX(contentRect) - width/2), 
-                                      roundf(CGRectGetMidY(contentRect) - labelTotal/2-10),
+                                      roundf(CGRectGetMidY(contentRect) - labelTotal/2-20),
                                       width, 
                                       labelTotal);
-
     
     questLabel.frame = CGRectMake(0, 0, width, questSize.height);
     titleLabel.frame = CGRectMake(0, CGRectGetMaxY(questLabel.frame), width, titleSize.height);
     subtitleLabel.frame = CGRectMake(0, CGRectGetMaxY(titleLabel.frame), width, subtitleSize.height);
     htmlView.frame = CGRectMake(0, CGRectGetMaxY(subtitleLabel.frame), width, htmlSize);
     
-    acceptButton.frame = CGRectMake(CGRectGetMinX(contentRect), CGRectGetMaxY(contentRect)-20, CGRectGetWidth(contentRect), 20);
+    acceptButton.frame = CGRectMake(CGRectGetMinX(contentRect), CGRectGetMaxY(contentRect)-33, CGRectGetWidth(contentRect), 30);
     
     self.frame = CGRectMake(0, 0, 200, CGRectGetHeight(contentRect) + CARAT_SIZE + CARAT_OFFSET + OFFSET*2);
     
-    [self addSubview:labelContainer];
+    if ([self isSelected]) {
+        [self addSubview:labelContainer];
+        [self addSubview:acceptButton];
+    }
 }
 
 - (CGFloat) contentHeight {
@@ -294,32 +323,50 @@ SmallLayerDelegate * del2;
     subtitleLabel.text = newSubtitle;
 }
 
-- (void) setSelected:(BOOL)selected {
-    [super setSelected:selected];
+- (void) setSelected:(BOOL)selected animated:(BOOL)animated {
+    
+    CATransition * anim = nil;
+    
+    if (animated) {
+        anim = [CATransition animation];
+        [anim setType:kCATransitionFade];
+        [anim setDuration:0.15];
+    }
     
     if (selected) {
         [self.layer addSublayer:backgroundLayer];
         [smallLayer removeFromSuperlayer];
-        
+    } else {
+        [self.layer addSublayer:smallLayer];
+        [backgroundLayer removeFromSuperlayer];
+    }
+    
+    if (animated) {
+        NSAssert(anim != nil, @"Animation must not be nil");
+        [self.layer addAnimation:anim forKey:@"imbored.fade"];
+    }
+    
+    [self setSelected:selected];
+}
+
+- (void) setSelected:(BOOL)selected {
+    [super setSelected:selected];
+    
+    if (selected) {
         [self addSubview:labelContainer];
         [self addSubview:acceptButton];
     }
     
-    else {
-        [self.layer addSublayer:smallLayer];
-        [backgroundLayer removeFromSuperlayer];
-        
+    else {        
         [labelContainer removeFromSuperview];
         [acceptButton removeFromSuperview];
     }
-    
-    [self setNeedsDisplay];
     
 }
 
 - (void) setHtmlString:(NSString *)newHtmlString {
     
-    if (newHtmlString) {
+    if (newHtmlString && [newHtmlString length] > 0) {
         
         [newHtmlString retain];
         [htmlString release];
@@ -333,7 +380,7 @@ SmallLayerDelegate * del2;
             htmlView.scrollView.scrollEnabled = NO;
             htmlView.scalesPageToFit = YES;
             
-            [self addSubview:htmlView];
+            [labelContainer addSubview:htmlView];
         }
         
         [htmlView loadHTMLString:htmlString baseURL:nil];
@@ -393,8 +440,8 @@ SmallLayerDelegate * del2;
 #pragma mark - Accept and Reject
 
 - (void) didTapAccept {
-    if ([delegate respondsToSelector:@selector(didAcceptQuest:)]) {
-        [delegate didAcceptQuest:self.annotation];
+    if ([delegate respondsToSelector:@selector(didAcceptQuest:inView:)]) {
+        [delegate didAcceptQuest:self.annotation inView:self];
     }
 }
 

@@ -131,21 +131,16 @@ DetailLayerDelegate * del;
     [self updateFrameWithWidth:frame.size.width];
 }
 
-- (void) setQuestString:(NSString *)newQuestString {
-    questLabel.text = newQuestString;
-}
-
-- (void) setTitleString:(NSString *)newTitleString {
-    titleLabel.text = newTitleString;
+- (void) setQuest:(NSString *)questString withTitle:(NSString *)titleString {
+    CATransition * anim = [CATransition animation];
+    [anim setType:kCATransitionMoveIn];
+    [anim setSubtype:kCATransitionFromBottom];
+    
+    questLabel.text = questString;
+    titleLabel.text = titleString;
     [self updateFrameWithWidth:self.frame.size.width];
-}
-
-- (NSString *) titleString {
-    return titleLabel.text;
-}
-
-- (NSString *) questString {
-    return questLabel.text;
+    
+    [self.layer addAnimation:anim forKey:@"pushanimation"];
 }
 
 @end
