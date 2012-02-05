@@ -19,7 +19,7 @@
 #import "QuestDetailView.h"
 
 @implementation ViewController
-@synthesize map, currentPoint, userLocation, acceptedQuest;
+@synthesize map, visibleQuest, userLocation, acceptedQuest;
 
 BOOL fireActivityTimer;
 
@@ -53,7 +53,7 @@ BOOL fireActivityTimer;
 
 - (void) dealloc{
     [map release];
-    [currentPoint release];
+    [visibleQuest release];
     [locationController release];
     [userLocation release];
     [shakeView release];
@@ -110,6 +110,16 @@ BOOL fireActivityTimer;
     }
 }
 
+- (void) didRejectQuest:(id)quest {
+    NSAssert([quest isKindOfClass:[Quest class]], @"Annotation %@ must be of class Quest", quest);
+}
+
+- (void) didAcceptQuest:(id)quest {
+    NSAssert([quest isKindOfClass:[Quest class]], @"Annotation %@ must be of class Quest", quest);
+    
+    self.acceptedQuest = quest;
+}
+
 #pragma mark - Map
 
 - (void)mapView:(MKMapView *)mapView regionWillChangeAnimated:(BOOL)animated {
@@ -118,9 +128,6 @@ BOOL fireActivityTimer;
 
 - (void) mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view {
     [self activityOccured];
-    if ([view.annotation isKindOfClass:[Quest class]]) {
-        self.acceptedQuest = (Quest *)view.annotation;
-    }
 }
 
 - (void) mapView:(MKMapView *)mapView didDeselectAnnotationView:(MKAnnotationView *)view {
@@ -140,7 +147,7 @@ BOOL fireActivityTimer;
 }
 
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation {
-    if (annotation == self.currentPoint) {
+    if (annotation == self.visibleQuest) {
         static NSString * const identifer = @"mapview_id_quest";
         QuestCalloutView * pin = (QuestCalloutView *) [mapView dequeueReusableAnnotationViewWithIdentifier:identifer];
         if (!pin) {
@@ -154,6 +161,7 @@ BOOL fireActivityTimer;
         pin.subtitle = q.subtitle;
         pin.questString = [UtilityKit capitalizeString:[q getVerb]];
         pin.htmlString = [q listings];
+        pin.delegate = self;
         
         [pin updateFrameAndLabels];
         
@@ -171,7 +179,7 @@ BOOL fireActivityTimer;
     if (buttonIndex == [actionSheet cancelButtonIndex]) {
         return;
     } else {
-        CLLocationCoordinate2D newCoord = [self.currentPoint coordinate];
+        CLLocationCoordinate2D newCoord = [self.visibleQuest coordinate];
         CLLocationCoordinate2D oldCoord = [map.userLocation coordinate];
         NSString * urlStr = [NSString stringWithFormat:@"http://maps.google.com/?saddr=%f,%f&daddr=%f,%f", 
                              oldCoord.latitude, oldCoord.longitude,
@@ -187,15 +195,16 @@ BOOL fireActivityTimer;
                              latitudeRange:map.region.span.latitudeDelta/2
                             longitudeRange:map.region.span.longitudeDelta/2
                                   complete:^(Quest *location) {
-                                      if (self.currentPoint)
-                                          [map removeAnnotation:self.currentPoint];
+                                      if (self.visibleQuest)
+                                          [map removeAnnotation:self.visibleQuest];
                                       
                                       if (location) {                    
                                           [map addAnnotation:location];
-                                          self.currentPoint = location;
+                                          [map selectAnnotation:location animated:YES];
+                                          self.visibleQuest = location;
                                       }
                                       
-                                      [map setCenterCoordinate:[self.currentPoint coordinate] animated:YES];
+                                      [map setCenterCoordinate:[self.visibleQuest coordinate] animated:YES];
                                       
                                       button.enabled = YES;
                                       [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];

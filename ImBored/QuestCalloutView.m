@@ -12,6 +12,29 @@
 #define CARAT_SIZE 20
 #define OFFSET 5
 #define RADIUS 10
+#define CARAT_OFFSET 10
+
+@interface SmallLayerDelegate : NSObject
+@end
+
+@implementation SmallLayerDelegate
+
+- (void)drawLayer:(CALayer *)layer inContext:(CGContextRef)ctx {
+    CGContextSaveGState(ctx);
+    
+    CGRect frame = layer.frame;
+    CGPoint bottomTip = CGPointMake(CGRectGetMidX(frame), CGRectGetMaxY(frame));
+    
+    CGContextSetShadowWithColor(ctx, CGSizeMake(0, 0), 5, [[UIColor blackColor] CGColor]);
+    
+    CGContextAddEllipseInRect(ctx, CGRectMake(bottomTip.x-10, bottomTip.y-20, 20, 20));
+    CGContextSetFillColorWithColor(ctx, [[UIColor whiteColor] CGColor]);
+    CGContextFillPath(ctx);
+    
+    CGContextRestoreGState(ctx);
+}
+
+@end
 
 @interface CalloutLayerDelegate : NSObject
 @end
@@ -33,14 +56,14 @@
     CGMutablePathRef p = CGPathCreateMutable();
     CGRect frame = layer.frame;
     
-    CGPoint bottomTip = CGPointMake(CGRectGetMidX(frame), CGRectGetMaxY(frame));
+    CGPoint bottomTip = CGPointMake(CGRectGetMidX(frame), CGRectGetMaxY(frame)-CARAT_OFFSET);
     CGPoint leftTip = CGPointMake(bottomTip.x - (CARAT_SIZE/2), bottomTip.y-CARAT_SIZE);
     CGPoint rightTip = CGPointMake(bottomTip.x + (CARAT_SIZE/2), bottomTip.y-CARAT_SIZE);
     
-    CGPoint brCorner = CGPointMake(CGRectGetMaxX(frame)-OFFSET, CGRectGetMaxY(frame)-CARAT_SIZE);
+    CGPoint brCorner = CGPointMake(CGRectGetMaxX(frame)-OFFSET, CGRectGetMaxY(frame)-CARAT_SIZE-CARAT_OFFSET);
     CGPoint trCorner = CGPointMake(CGRectGetMaxX(frame)-OFFSET, CGRectGetMinY(frame)+OFFSET);
     CGPoint tlCorner = CGPointMake(CGRectGetMinX(frame)+OFFSET, CGRectGetMinY(frame)+OFFSET);
-    CGPoint blCorner = CGPointMake(CGRectGetMinX(frame)+OFFSET, CGRectGetMaxY(frame)-CARAT_SIZE);
+    CGPoint blCorner = CGPointMake(CGRectGetMinX(frame)+OFFSET, CGRectGetMaxY(frame)-CARAT_SIZE-CARAT_OFFSET);
     
     CGPathMoveToPoint(p, NULL, tlCorner.x, tlCorner.y+RADIUS);
     [self arcPath:p aroundCorner:tlCorner toPoint:CGPointMake(tlCorner.x+RADIUS, tlCorner.y)];
@@ -109,15 +132,21 @@
 @end
 
 @implementation QuestCalloutView
-@synthesize subtitle, title, questString, htmlString;
-CalloutLayerDelegate * del;
+@synthesize subtitle, title, questString, htmlString, delegate;
+CalloutLayerDelegate * del1;
+SmallLayerDelegate * del2;
 
 - (void) initVariables:(CGRect)frame {
-    del = [[CalloutLayerDelegate alloc] init];
+    del1 = [[CalloutLayerDelegate alloc] init];
+    del2 = [[SmallLayerDelegate alloc] init];
     
     backgroundLayer = [[CALayer layer] retain];
     backgroundLayer.frame = frame;
-    backgroundLayer.delegate = del;
+    backgroundLayer.delegate = del1;
+    
+    smallLayer = [[CALayer layer] retain];
+    smallLayer.frame = frame;
+    smallLayer.delegate = del2;
     
     [self.layer addSublayer:backgroundLayer];
     
@@ -153,6 +182,11 @@ CalloutLayerDelegate * del;
     subtitleLabel.shadowOffset = CGSizeMake(1, 1);
     subtitleLabel.shadowColor = [UIColor darkGrayColor];
     subtitleLabel.textAlignment = UITextAlignmentCenter;
+        
+    acceptButton = [[UIButton alloc] initWithFrame:CGRectZero];
+    acceptButton.titleLabel.text = @"Accept";
+    acceptButton.backgroundColor = [UIColor blackColor];
+    [acceptButton addTarget:self action:@selector(didTapAccept) forControlEvents:UIControlEventTouchUpInside];
     
     CGFloat containerHeight = questLabel.frame.size.height+titleLabel.frame.size.height+subtitleLabel.frame.size.height;
     
@@ -162,20 +196,29 @@ CalloutLayerDelegate * del;
     [labelContainer addSubview:subtitleLabel];
     [labelContainer addSubview:titleLabel];
     [labelContainer addSubview:questLabel];
+    [labelContainer addSubview:htmlView];
+    
+    [self addSubview:acceptButton];
     
     self.backgroundColor = [UIColor clearColor];
     
 }
 
 - (void) dealloc {
-    [del release];
+    [del1 release];
+    [del2 release];
     [backgroundLayer release];
+    [smallLayer release];
+    
     [subtitleLabel release];
     [titleLabel release];
     [questLabel release];
+    
     [labelContainer release];
     [htmlString release];
     [htmlView release];
+    
+    [acceptButton release];
     
     [super dealloc];
 }
@@ -218,7 +261,7 @@ CalloutLayerDelegate * del;
     
     CGFloat labelTotal = questSize.height+titleSize.height+subtitleSize.height;
     labelContainer.frame = CGRectMake(roundf(CGRectGetMidX(contentRect) - width/2), 
-                                      roundf(CGRectGetMidY(contentRect) - labelTotal/2),
+                                      roundf(CGRectGetMidY(contentRect) - labelTotal/2-10),
                                       width, 
                                       labelTotal);
 
@@ -226,10 +269,11 @@ CalloutLayerDelegate * del;
     questLabel.frame = CGRectMake(0, 0, width, questSize.height);
     titleLabel.frame = CGRectMake(0, CGRectGetMaxY(questLabel.frame), width, titleSize.height);
     subtitleLabel.frame = CGRectMake(0, CGRectGetMaxY(titleLabel.frame), width, subtitleSize.height);
+    htmlView.frame = CGRectMake(0, CGRectGetMaxY(subtitleLabel.frame), width, htmlSize);
     
-    htmlView.frame = CGRectMake(OFFSET+5, CGRectGetMaxY(contentRect)-htmlSize, width, htmlSize);
+    acceptButton.frame = CGRectMake(CGRectGetMinX(contentRect), CGRectGetMaxY(contentRect)-20, CGRectGetWidth(contentRect), 20);
     
-    self.frame = CGRectMake(0, 0, 200, CGRectGetHeight(contentRect) + CARAT_SIZE + OFFSET*2);
+    self.frame = CGRectMake(0, 0, 200, CGRectGetHeight(contentRect) + CARAT_SIZE + CARAT_OFFSET + OFFSET*2);
     
     [self addSubview:labelContainer];
 }
@@ -252,24 +296,25 @@ CalloutLayerDelegate * del;
 
 - (void) setSelected:(BOOL)selected {
     [super setSelected:selected];
-/*    
+    
     if (selected) {
-        self.backgroundColor = [UIColor clearColor];
-        [self becomeFirstResponder];
+        [self.layer addSublayer:backgroundLayer];
+        [smallLayer removeFromSuperlayer];
+        
+        [self addSubview:labelContainer];
+        [self addSubview:acceptButton];
     }
+    
     else {
-        self.backgroundColor = [UIColor redColor];
-        [self resignFirstResponder];
+        [self.layer addSublayer:smallLayer];
+        [backgroundLayer removeFromSuperlayer];
+        
+        [labelContainer removeFromSuperview];
+        [acceptButton removeFromSuperview];
     }
-    */
-}
-
-- (BOOL) canBecomeFirstResponder {
-    return YES;
-}
-
-- (void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    self.selected = YES;
+    
+    [self setNeedsDisplay];
+    
 }
 
 - (void) setHtmlString:(NSString *)newHtmlString {
@@ -336,11 +381,21 @@ CalloutLayerDelegate * del;
     [super setFrame:[self roundedFrame:frame]];
     
     backgroundLayer.frame = [self roundedFrame:frame];
+    smallLayer.frame = [self roundedFrame:frame];
     [self setNeedsDisplay];
 }
 
 - (void)drawRect:(CGRect)rect {
     [backgroundLayer setNeedsDisplay];
+    [smallLayer setNeedsDisplay];
+}
+
+#pragma mark - Accept and Reject
+
+- (void) didTapAccept {
+    if ([delegate respondsToSelector:@selector(didAcceptQuest:)]) {
+        [delegate didAcceptQuest:self.annotation];
+    }
 }
 
 
