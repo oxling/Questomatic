@@ -133,6 +133,7 @@ BOOL fireActivityTimer = NO;
     
     self.acceptedQuest = quest;
     view.acceptButton.enabled = NO;
+    [view updateButtonStyle:NO];
 }
 
 - (void) didTapCalloutView:(QuestCalloutView *)view {
@@ -182,6 +183,7 @@ BOOL fireActivityTimer = NO;
         pin.htmlString = [q listings];
         pin.delegate = self;
         pin.acceptButton.enabled = YES;
+        [pin updateButtonStyle:YES];
         
         [pin updateFrameAndLabels];
         

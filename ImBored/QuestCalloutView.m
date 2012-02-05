@@ -185,7 +185,7 @@ SmallLayerDelegate * del2;
     questLabel.shadowOffset = CGSizeMake(1, 1);
     questLabel.shadowColor = [UIColor darkGrayColor];
     questLabel.textAlignment = UITextAlignmentCenter;
-    questLabel.text = @"Your quest is to visit";
+    questLabel.text = @"Visit";
     
     titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(questLabel.frame), width, 40)];
     titleLabel.backgroundColor = [UIColor clearColor];
@@ -208,8 +208,13 @@ SmallLayerDelegate * del2;
     acceptButton = [[UIButton buttonWithType:UIButtonTypeRoundedRect] retain];
     [acceptButton setTitle:@"Accept Quest" forState:UIControlStateNormal];
     [acceptButton setTitle:@"Accepted" forState:UIControlStateDisabled];
-    acceptButton.titleLabel.textColor = [UIColor darkGrayColor];
+    [acceptButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateDisabled];
     [acceptButton addTarget:self action:@selector(didTapAccept) forControlEvents:UIControlEventTouchUpInside];
+    
+    acceptButton.layer.shadowColor = [[UIColor whiteColor] CGColor];
+    acceptButton.layer.shadowOffset = CGSizeMake(0, 0);
+    acceptButton.layer.shadowOpacity = 0.5;
+    acceptButton.layer.shadowRadius = 3.0;
     
     CGFloat containerHeight = questLabel.frame.size.height+titleLabel.frame.size.height+subtitleLabel.frame.size.height;
     
@@ -468,6 +473,20 @@ SmallLayerDelegate * del2;
         if ([delegate respondsToSelector:@selector(didTapCalloutView:)]) {
             [delegate didTapCalloutView:self];
         }
+    }
+}
+
+- (void) updateButtonStyle:(BOOL)enabled {
+    if (enabled) {
+        acceptButton.alpha = 1.0;
+        acceptButton.layer.shadowColor = [[UIColor whiteColor] CGColor];
+        acceptButton.layer.shadowOffset = CGSizeMake(0, 0);
+        acceptButton.layer.shadowOpacity = 0.5;
+        acceptButton.layer.shadowRadius = 3.0;
+    } else {
+        acceptButton.layer.shadowColor = [[UIColor blackColor] CGColor];
+        acceptButton.layer.shadowOpacity = 0.3;
+        acceptButton.alpha = 0.75;
     }
 }
 

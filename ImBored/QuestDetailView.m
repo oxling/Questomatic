@@ -113,14 +113,14 @@ DetailLayerDelegate * del;
 }
 
 - (void) updateFrameWithWidth:(CGFloat)width {
-    CGSize titleSize = [titleLabel.text sizeWithFont:titleLabel.font constrainedToSize:CGSizeMake(width-10, 200) lineBreakMode:UILineBreakModeWordWrap];
+    CGSize titleSize = [titleLabel.text sizeWithFont:titleLabel.font constrainedToSize:CGSizeMake(width-30, 200) lineBreakMode:UILineBreakModeWordWrap];
     
     CGRect frame = CGRectMake(0, 0, width, titleSize.height+17+SHADOWSPACE);
     [super setFrame:frame];
     [backgroundLayer setFrame:frame];
     [self setNeedsDisplay];
     
-    titleLabel.frame = CGRectMake(5, 18, width-10, titleSize.height);
+    titleLabel.frame = CGRectMake(15, 18, width-30, titleSize.height);
     
     [self addSubview:titleLabel];
     [self addSubview:questLabel];

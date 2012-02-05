@@ -49,5 +49,6 @@
 - (void) updateFrameAndLabels;
 - (CGFloat) contentHeight;
 - (void) didTapAccept;
+- (void) updateButtonStyle:(BOOL)enabled;
 
 @end
