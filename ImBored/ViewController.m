@@ -19,7 +19,7 @@
 #import "QuestDetailView.h"
 
 @implementation ViewController
-@synthesize map, currentPoint, userLocation;
+@synthesize map, currentPoint, userLocation, acceptedQuest;
 
 BOOL fireActivityTimer;
 
@@ -30,6 +30,7 @@ BOOL fireActivityTimer;
     shakeView.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin;
     
     detailView = [[QuestDetailView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 50)];
+    detailView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     
     srand(time(NULL));
 }
@@ -57,6 +58,7 @@ BOOL fireActivityTimer;
     [userLocation release];
     [shakeView release];
     [detailView release];
+    [acceptedQuest release];
     
     [super dealloc];
 }
@@ -82,13 +84,30 @@ BOOL fireActivityTimer;
 
 - (void) motionEnded:(UIEventSubtype)motion withEvent:(UIEvent *)event {
     if (event.subtype == UIEventSubtypeMotionShake) {
-        [self didTapRandom:nil];
+        [self didTapRandom];
         [self activityOccured];
     }
 }
 
 - (BOOL) canBecomeFirstResponder {
     return YES;
+}
+
+#pragma mark - Accept quest
+- (void) setAcceptedQuest:(Quest *)newAcceptedQuest {
+    if (newAcceptedQuest == acceptedQuest)
+        return;
+    
+    [acceptedQuest release];
+    acceptedQuest = [newAcceptedQuest retain];
+    
+    if (acceptedQuest) {
+        [self.view addSubview:detailView];
+        detailView.titleString = acceptedQuest.title;
+        detailView.questString = [NSString stringWithFormat:@"Your quest is to %@", [acceptedQuest getVerb]];
+    } else {
+        [detailView removeFromSuperview];
+    }
 }
 
 #pragma mark - Map
@@ -99,6 +118,9 @@ BOOL fireActivityTimer;
 
 - (void) mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view {
     [self activityOccured];
+    if ([view.annotation isKindOfClass:[Quest class]]) {
+        self.acceptedQuest = (Quest *)view.annotation;
+    }
 }
 
 - (void) mapView:(MKMapView *)mapView didDeselectAnnotationView:(MKAnnotationView *)view {
@@ -130,7 +152,7 @@ BOOL fireActivityTimer;
         pin.annotation = annotation;
         pin.title = q.title;
         pin.subtitle = q.subtitle;
-        pin.questString = [NSString stringWithFormat:@"Your quest is to %@", [q getVerb]];
+        pin.questString = [UtilityKit capitalizeString:[q getVerb]];
         pin.htmlString = [q listings];
         
         [pin updateFrameAndLabels];
@@ -181,13 +203,13 @@ BOOL fireActivityTimer;
                                   }];        
 }
 
-- (void) didTapRandom:(id)sender {
+- (void) didTapRandom {
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     button.enabled = NO;
     [self generateRandomLocation];
 }
 
-
+#pragma mark - View management
 
 - (void)viewDidAppear:(BOOL)animated
 {

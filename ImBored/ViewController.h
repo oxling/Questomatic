@@ -25,6 +25,7 @@
     
     Quest * currentPoint;
     Quest * userLocation;
+    Quest * acceptedQuest;
     
     LocationController * locationController;
     ShakeView * shakeView;
@@ -35,7 +36,8 @@
 @property (nonatomic, retain) IBOutlet MKMapView * map;
 @property (nonatomic, retain) Quest * currentPoint;
 @property (nonatomic, retain) Quest * userLocation;
+@property (nonatomic, retain) Quest * acceptedQuest;
 
-- (id) randomItem:(id)item, ... NS_REQUIRES_NIL_TERMINATION;
+- (void) didTapRandom;
 
 @end

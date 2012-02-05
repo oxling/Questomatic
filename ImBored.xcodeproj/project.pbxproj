@@ -12,6 +12,7 @@
 		E1573B8014CC963D004AEF21 /* ShakeView.m in Sources */ = {isa = PBXBuildFile; fileRef = E1573B7F14CC963D004AEF21 /* ShakeView.m */; };
 		E1573B8214CC9670004AEF21 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1573B8114CC9670004AEF21 /* QuartzCore.framework */; };
 		E1573B8514CCAC6A004AEF21 /* QuestCalloutView.m in Sources */ = {isa = PBXBuildFile; fileRef = E1573B8414CCAC6A004AEF21 /* QuestCalloutView.m */; };
+		E18E574414DE17F300597734 /* UtilityKit.m in Sources */ = {isa = PBXBuildFile; fileRef = E18E574314DE17F300597734 /* UtilityKit.m */; };
 		E1AEEBAE14CB382200C14F98 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1AEEBAD14CB382200C14F98 /* UIKit.framework */; };
 		E1AEEBB014CB382200C14F98 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1AEEBAF14CB382200C14F98 /* Foundation.framework */; };
 		E1AEEBB214CB382200C14F98 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1AEEBB114CB382200C14F98 /* CoreGraphics.framework */; };
@@ -53,6 +54,8 @@
 		E1573B8114CC9670004AEF21 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		E1573B8314CCAC6A004AEF21 /* QuestCalloutView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QuestCalloutView.h; sourceTree = "<group>"; };
 		E1573B8414CCAC6A004AEF21 /* QuestCalloutView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QuestCalloutView.m; sourceTree = "<group>"; };
+		E18E574214DE17F300597734 /* UtilityKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UtilityKit.h; sourceTree = "<group>"; };
+		E18E574314DE17F300597734 /* UtilityKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UtilityKit.m; sourceTree = "<group>"; };
 		E1AEEBA914CB382200C14F98 /* Questomatic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Questomatic.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1AEEBAD14CB382200C14F98 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		E1AEEBAF14CB382200C14F98 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -183,6 +186,8 @@
 				E1AEEBE714CB505B00C14F98 /* MapAPIController.m */,
 				E1AEEBE914CB581A00C14F98 /* MapAPIResultParser.h */,
 				E1AEEBEA14CB581A00C14F98 /* MapAPIResultParser.m */,
+				E18E574214DE17F300597734 /* UtilityKit.h */,
+				E18E574314DE17F300597734 /* UtilityKit.m */,
 				E1AEEBB414CB382200C14F98 /* Supporting Files */,
 			);
 			path = ImBored;
@@ -335,6 +340,7 @@
 				E1573B8014CC963D004AEF21 /* ShakeView.m in Sources */,
 				E1573B8514CCAC6A004AEF21 /* QuestCalloutView.m in Sources */,
 				E1F0342C14D45B04000F8BDE /* QuestDetailView.m in Sources */,
+				E18E574414DE17F300597734 /* UtilityKit.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
