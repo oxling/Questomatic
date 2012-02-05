@@ -16,7 +16,7 @@
 
 #import "Quest.h"
 
-#import "ShakeView.h"
+#import "InfoView.h"
 #import "QuestDetailView.h"
 #import "QuestCalloutView.h"
 
@@ -29,8 +29,10 @@
     Quest * acceptedQuest;
     
     LocationController * locationController;
-    ShakeView * shakeView;
+    InfoView * infoView;
     QuestDetailView * detailView;
+    UIView * overlayView;
+    UIActivityIndicatorView * activityView;
     
     NSTimer * actionTimer;
 }

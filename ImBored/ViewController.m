@@ -21,16 +21,26 @@
 @implementation ViewController
 @synthesize map, visibleQuest, userLocation, acceptedQuest;
 
-BOOL fireActivityTimer;
+BOOL fireActivityTimer = NO;
 
 - (void) initVariables { 
     locationController = [[LocationController alloc] init];
-    shakeView = [[ShakeView alloc] initWithFrame:CGRectMake(0, 0, 176, 126)];
-    shakeView.center = self.view.center;
-    shakeView.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin;
+    
+    infoView = [[InfoView alloc] initWithFrame:CGRectMake(0, 0, 176, 126)];
+    infoView.center = self.view.center;
+    infoView.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin;
     
     detailView = [[QuestDetailView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 50)];
     detailView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    
+    overlayView = [[UIView alloc] initWithFrame:self.view.frame];
+    overlayView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    overlayView.backgroundColor = [UIColor blackColor];
+    overlayView.alpha = 0.35;
+        
+    activityView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    activityView.center = overlayView.center;
+    activityView.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
     
     srand(time(NULL));
 }
@@ -56,21 +66,28 @@ BOOL fireActivityTimer;
     [visibleQuest release];
     [locationController release];
     [userLocation release];
-    [shakeView release];
+    [infoView release];
     [detailView release];
     [acceptedQuest release];
+    [overlayView release];
+    [activityView release];
     
     [super dealloc];
 }
 
 #pragma mark - Actions
 
+- (NSString *) labelString {
+    NSString * device = [[UIDevice currentDevice] model];
+    return [NSString stringWithFormat:@"Shake your %@ to find a new quest on the map", device];
+}
+
 - (void) activityOccured {
     if (fireActivityTimer) {
         [actionTimer invalidate];
         actionTimer = nil;
     
-        [shakeView animateRemoveFromSuperView];
+        [infoView animateRemoveFromSuperView];
         actionTimer = [NSTimer scheduledTimerWithTimeInterval:30.0 target:self selector:@selector(noActivity) userInfo:nil repeats:NO];
     }
 }
@@ -79,7 +96,8 @@ BOOL fireActivityTimer;
     [actionTimer invalidate];
     actionTimer = nil;
     
-    [shakeView animateAddToSuperView:self.view];
+    [infoView animateAddToSuperView:self.view];
+    infoView.label.text = [self labelString];
 }
 
 - (void) motionEnded:(UIEventSubtype)motion withEvent:(UIEvent *)event {
@@ -185,8 +203,24 @@ BOOL fireActivityTimer;
     }
 }
 
+- (void) showLoadingOverlay {
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+    overlayView.frame = map.frame;
+    activityView.center = map.center;
+    [self.view addSubview:overlayView];
+    [self.view addSubview:activityView];
+    [activityView startAnimating];
+}
+
+- (void) hideLoadingOverlay {
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+    [overlayView removeFromSuperview];
+    [activityView removeFromSuperview];
+}
+
 
 - (void) generateRandomLocation {
+    [self showLoadingOverlay];
     
     [locationController randomLocationNear:map.region.center
                              latitudeRange:map.region.span.latitudeDelta/2
@@ -202,15 +236,11 @@ BOOL fireActivityTimer;
                                       
                                       [map setCenterCoordinate:[self.visibleQuest coordinate] animated:YES];
                                       [map selectAnnotation:self.visibleQuest animated:NO];
-                                      button.enabled = YES;
-                                      [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-
+                                      [self hideLoadingOverlay];
                                   }];        
 }
 
 - (void) didTapRandom {
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
-    button.enabled = NO;
     [self generateRandomLocation];
 }
 
@@ -236,12 +266,7 @@ BOOL fireActivityTimer;
             loc.title = @"Me";
             loc.coordinate = newLocation.coordinate;
             
-            
-            if (self.userLocation) 
-                [map removeAnnotation:userLocation];
-            
             self.userLocation = loc;
-            [map addAnnotation:userLocation];
             [loc release];
             
             fireActivityTimer = YES;
@@ -271,7 +296,7 @@ BOOL fireActivityTimer;
     [actionTimer invalidate];
     actionTimer = nil;
     
-    [shakeView removeFromSuperview];
+    [infoView removeFromSuperview];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
