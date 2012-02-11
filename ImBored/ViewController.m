@@ -19,30 +19,13 @@
 #import "QuestDetailView.h"
 
 @implementation ViewController
-@synthesize map, visibleQuest, userLocation, acceptedQuest;
+@synthesize map, visibleQuest, userLocation, acceptedQuest, expandedView;
 
 BOOL fireActivityTimer = NO;
 
 - (void) initVariables { 
     locationController = [[LocationController alloc] init];
-    
-    infoView = [[InfoView alloc] initWithFrame:CGRectMake(0, 0, 176, 126)];
-    infoView.center = self.view.center;
-    infoView.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin;
-    
-    detailView = [[QuestDetailView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 50)];
-    detailView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    
-    overlayView = [[UIView alloc] initWithFrame:self.view.frame];
-    overlayView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    overlayView.backgroundColor = [UIColor blackColor];
-    overlayView.alpha = 0.45;
         
-    activityView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-    activityView.center = overlayView.center;
-    activityView.frame = [UtilityKit roundFrame:activityView.frame];
-    activityView.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
-    
     srand(time(NULL));
 }
 
@@ -72,6 +55,7 @@ BOOL fireActivityTimer = NO;
     [acceptedQuest release];
     [overlayView release];
     [activityView release];
+    [expandedView release];
     
     [super dealloc];
 }
@@ -230,8 +214,8 @@ BOOL fireActivityTimer = NO;
     [self showLoadingOverlay];
     
     [locationController randomLocationNear:map.region.center
-                             latitudeRange:map.region.span.latitudeDelta/2
-                            longitudeRange:map.region.span.longitudeDelta/2
+                             latitudeRange:map.region.span.latitudeDelta/3
+                            longitudeRange:map.region.span.longitudeDelta/3
                                   complete:^(Quest *location) {
                                       if (self.visibleQuest)
                                           [map removeAnnotation:self.visibleQuest];
@@ -318,6 +302,53 @@ BOOL fireActivityTimer = NO;
 
 - (void) didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
     fireActivityTimer = YES;
+}
+
+- (void) viewDidLoad {
+    [super viewDidLoad];
+    
+    infoView = [[InfoView alloc] initWithFrame:CGRectMake(0, 0, 176, 126)];
+    infoView.center = self.view.center;
+    infoView.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin;
+    
+    detailView = [[QuestDetailView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 50)];
+    detailView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    
+    overlayView = [[UIView alloc] initWithFrame:self.view.frame];
+    overlayView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    overlayView.backgroundColor = [UIColor blackColor];
+    overlayView.alpha = 0.45;
+    
+    activityView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    activityView.center = overlayView.center;
+    activityView.frame = [UtilityKit roundFrame:activityView.frame];
+    activityView.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+    
+    [[NSBundle mainBundle] loadNibNamed:@"ExpandedDetailView" owner:self options:nil];
+    expandedView.frame = CGRectMake(0, 50, self.view.frame.size.width, self.view.frame.size.height - 50);
+    expandedView.delegate = self;
+}
+
+- (void) viewDidUnload {
+    [super viewDidUnload];
+    
+    [infoView removeFromSuperview];
+    [infoView release];
+    infoView = nil;
+    
+    [detailView removeFromSuperview];
+    [detailView release];
+    detailView = nil;
+    
+    [overlayView removeFromSuperview];
+    [overlayView release];
+    overlayView = nil;
+    
+    [activityView removeFromSuperview];
+    [activityView release];
+    activityView = nil;
+    
+    self.expandedView = nil;
 }
 
 @end

@@ -9,6 +9,40 @@
 #import "ExpandedDetailView.h"
 
 @implementation ExpandedDetailView
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> expandedview
+@synthesize addressTextView, imageView, delegate;
+
+- (void) dealloc {
+    [addressTextView release];
+    [imageView release];
+    [super dealloc];
+}
+
+- (void) didTapCancel:(id)sender {
+    
+    if ([delegate respondsToSelector:@selector(didCancelQuest)]) {
+        [delegate didCancelQuest];
+    }
+}
+
+- (void) didTapComplete:(id)sender {
+    
+    if ([delegate respondsToSelector:@selector(didCompleteQuest)]) {
+        [delegate didCompleteQuest];
+    }
+}
+
+- (void) didTapViewMap:(id)sender {
+    if ([delegate respondsToSelector:@selector(didViewQuest)]) {
+        [delegate didViewQuest];
+    }
+}
+
+<<<<<<< HEAD
+=======
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -27,5 +61,8 @@
     // Drawing code
 }
 */
+>>>>>>> 6ba3996... Ignoring more files...
+=======
+>>>>>>> expandedview
 
 @end

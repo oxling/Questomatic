@@ -19,8 +19,9 @@
 #import "InfoView.h"
 #import "QuestDetailView.h"
 #import "QuestCalloutView.h"
+#import "ExpandedDetailView.h"
 
-@interface ViewController : UIViewController <MKMapViewDelegate, UIActionSheetDelegate, QuestCalloutDelegate> {
+@interface ViewController : UIViewController <MKMapViewDelegate, UIActionSheetDelegate, QuestCalloutDelegate, ExpandedDetailViewDelegate> {
     MKMapView * map;
     UIButton * button;
     
@@ -31,12 +32,15 @@
     LocationController * locationController;
     InfoView * infoView;
     QuestDetailView * detailView;
+    ExpandedDetailView * expandedView;
+    
     UIView * overlayView;
     UIActivityIndicatorView * activityView;
     
     NSTimer * actionTimer;
 }
 @property (nonatomic, retain) IBOutlet MKMapView * map;
+@property (nonatomic, retain) IBOutlet ExpandedDetailView * expandedView;
 @property (nonatomic, retain) Quest * visibleQuest;
 @property (nonatomic, retain) Quest * userLocation;
 @property (nonatomic, retain) Quest * acceptedQuest;
