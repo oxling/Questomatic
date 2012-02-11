@@ -50,7 +50,6 @@
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
-
     MapAPIResultParser * p = [[MapAPIResultParser alloc] init];
 
     NSArray * places = [p parseResults:data];

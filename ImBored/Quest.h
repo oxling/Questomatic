@@ -39,6 +39,7 @@
 @property (nonatomic, readonly) NSMutableString * listings;
 
 - (NSString *) getVerb;
+- (NSURL *) getLink;
 
 @end
 

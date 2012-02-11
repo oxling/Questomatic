@@ -9,23 +9,33 @@
 #import "ExpandedDetailView.h"
 
 @implementation ExpandedDetailView
+@synthesize addressTextView, imageView, delegate;
 
-- (id)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        // Initialization code
+- (void) dealloc {
+    [addressTextView release];
+    [imageView release];
+    [super dealloc];
+}
+
+- (void) didTapCancel:(id)sender {
+    
+    if ([delegate respondsToSelector:@selector(didCancelQuest)]) {
+        [delegate didCancelQuest];
     }
-    return self;
 }
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
-{
-    // Drawing code
+- (void) didTapComplete:(id)sender {
+    
+    if ([delegate respondsToSelector:@selector(didCompleteQuest)]) {
+        [delegate didCompleteQuest];
+    }
 }
-*/
+
+- (void) didTapViewMap:(id)sender {
+    if ([delegate respondsToSelector:@selector(didViewQuest)]) {
+        [delegate didViewQuest];
+    }
+}
+
 
 @end

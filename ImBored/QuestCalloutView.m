@@ -483,10 +483,15 @@ SmallLayerDelegate * del2;
         acceptButton.layer.shadowOffset = CGSizeMake(0, 0);
         acceptButton.layer.shadowOpacity = 0.5;
         acceptButton.layer.shadowRadius = 3.0;
+        
+        acceptButton.titleLabel.shadowColor = [UIColor clearColor];
     } else {
         acceptButton.layer.shadowColor = [[UIColor blackColor] CGColor];
         acceptButton.layer.shadowOpacity = 0.3;
         acceptButton.alpha = 0.75;
+        acceptButton.titleLabel.shadowColor = [UIColor lightGrayColor];
+        acceptButton.titleLabel.shadowOffset = CGSizeMake(0, -1);
+
     }
 }
 
