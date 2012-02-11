@@ -10,6 +10,9 @@
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> expandedview
 =======
 >>>>>>> expandedview
 @protocol ExpandedDetailViewDelegate <NSObject>
@@ -37,9 +40,12 @@
 - (IBAction)didTapCancel:(id)sender;
 - (IBAction)didTapViewMap:(id)sender;
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 @interface ExpandedDetailView : UIView
 >>>>>>> 6ba3996... Ignoring more files...
+=======
+>>>>>>> expandedview
 =======
 >>>>>>> expandedview
 

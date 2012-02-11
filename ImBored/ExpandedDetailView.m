@@ -11,6 +11,9 @@
 @implementation ExpandedDetailView
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> expandedview
 =======
 >>>>>>> expandedview
 @synthesize addressTextView, imageView, delegate;
@@ -42,6 +45,7 @@
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
 - (id)initWithFrame:(CGRect)frame
@@ -62,6 +66,8 @@
 }
 */
 >>>>>>> 6ba3996... Ignoring more files...
+=======
+>>>>>>> expandedview
 =======
 >>>>>>> expandedview
 

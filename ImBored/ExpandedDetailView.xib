@@ -4,6 +4,9 @@
 		<int key="IBDocument.SystemTarget">1280</int>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> expandedview
 =======
 >>>>>>> expandedview
 		<string key="IBDocument.SystemVersion">11C74</string>
@@ -21,6 +24,7 @@
 			<string>IBUIView</string>
 			<string>IBProxyObject</string>
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 		<string key="IBDocument.SystemVersion">11C25</string>
 		<string key="IBDocument.InterfaceBuilderVersion">1919</string>
@@ -34,6 +38,8 @@
 			<string>IBProxyObject</string>
 			<string>IBUIView</string>
 >>>>>>> 6ba3996... Ignoring more files...
+=======
+>>>>>>> expandedview
 =======
 >>>>>>> expandedview
 		</array>
@@ -58,6 +64,9 @@
 				<int key="NSvFlags">274</int>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> expandedview
 =======
 >>>>>>> expandedview
 				<array class="NSMutableArray" key="NSSubviews">
@@ -191,11 +200,14 @@
 				<reference key="NSWindow"/>
 				<reference key="NSNextKeyView" ref="739886376"/>
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 				<string key="NSFrame">{{0, 20}, {320, 460}}</string>
 				<reference key="NSSuperview"/>
 				<reference key="NSWindow"/>
 >>>>>>> 6ba3996... Ignoring more files...
+=======
+>>>>>>> expandedview
 =======
 >>>>>>> expandedview
 				<object class="NSColor" key="IBUIBackgroundColor">
@@ -207,6 +219,9 @@
 				</object>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> expandedview
 =======
 >>>>>>> expandedview
 				<object class="IBUISimulatedSizeMetrics" key="IBUISimulatedDestinationMetrics">
@@ -214,9 +229,12 @@
 					<string key="IBUIDisplayName">Freeform</string>
 				</object>
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 				<object class="IBUISimulatedStatusBarMetrics" key="IBUISimulatedStatusBarMetrics"/>
 >>>>>>> 6ba3996... Ignoring more files...
+=======
+>>>>>>> expandedview
 =======
 >>>>>>> expandedview
 				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -225,6 +243,9 @@
 		<object class="IBObjectContainer" key="IBDocument.Objects">
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> expandedview
 =======
 >>>>>>> expandedview
 			<array class="NSMutableArray" key="connectionRecords">
@@ -281,9 +302,12 @@
 				</object>
 			</array>
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 			<array class="NSMutableArray" key="connectionRecords"/>
 >>>>>>> 6ba3996... Ignoring more files...
+=======
+>>>>>>> expandedview
 =======
 >>>>>>> expandedview
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -299,6 +323,9 @@
 						<reference key="object" ref="191373211"/>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> expandedview
 =======
 >>>>>>> expandedview
 						<array class="NSMutableArray" key="children">
@@ -309,8 +336,11 @@
 							<reference ref="548236518"/>
 						</array>
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 6ba3996... Ignoring more files...
+=======
+>>>>>>> expandedview
 =======
 >>>>>>> expandedview
 						<reference key="parent" ref="0"/>
@@ -328,6 +358,9 @@
 					</object>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> expandedview
 =======
 >>>>>>> expandedview
 					<object class="IBObjectRecord">
@@ -370,6 +403,7 @@
 				<string key="8.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="9.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 				</array>
 			</object>
@@ -381,6 +415,8 @@
 >>>>>>> 6ba3996... Ignoring more files...
 =======
 >>>>>>> expandedview
+=======
+>>>>>>> expandedview
 			</dictionary>
 			<dictionary class="NSMutableDictionary" key="unlocalizedProperties"/>
 			<nil key="activeLocalization"/>
@@ -388,6 +424,9 @@
 			<nil key="sourceID"/>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> expandedview
 =======
 >>>>>>> expandedview
 			<int key="maxID">15</int>
@@ -460,11 +499,14 @@
 			</array>
 		</object>
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 			<int key="maxID">2</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes"/>
 >>>>>>> 6ba3996... Ignoring more files...
+=======
+>>>>>>> expandedview
 =======
 >>>>>>> expandedview
 		<int key="IBDocument.localizationMode">0</int>
@@ -473,10 +515,14 @@
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 		<string key="IBCocoaTouchPluginVersion">933</string>
 =======
 		<string key="IBCocoaTouchPluginVersion">916</string>
 >>>>>>> 6ba3996... Ignoring more files...
+=======
+		<string key="IBCocoaTouchPluginVersion">933</string>
+>>>>>>> expandedview
 =======
 		<string key="IBCocoaTouchPluginVersion">933</string>
 >>>>>>> expandedview
