@@ -3,7 +3,7 @@
 //  ImBored
 //
 //  Created by Amy Dyer on 1/28/12.
-//  Copyright (c) 2012 Intuit. All rights reserved.
+//  Copyright (c) 2012 Amy Dyer. All rights reserved.
 //
 
 #import "QuestDetailView.h"
@@ -65,47 +65,57 @@
 @end
 
 @implementation QuestDetailView
-DetailLayerDelegate * del;
+
+- (void) initVariablesWithFrame:(CGRect)frame {
+    del = [[DetailLayerDelegate alloc] init];
+    
+    backgroundLayer = [[CALayer layer] retain];
+    backgroundLayer.delegate = del;
+    backgroundLayer.frame = CGRectMake(0, 0, frame.size.width, frame.size.height-SHADOWSPACE);
+    backgroundLayer.shadowColor = [[UIColor blackColor] CGColor];
+    backgroundLayer.shadowOpacity = 1.0;
+    backgroundLayer.shadowOffset = CGSizeMake(0, 2);
+    backgroundLayer.shadowRadius = 3.0;
+    [backgroundLayer setContentsScale:[self contentScaleFactor]];
+    
+    [self.layer addSublayer:backgroundLayer];
+    self.backgroundColor = [UIColor clearColor];
+    
+    questLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 0, frame.size.width-10, 17)];
+    questLabel.backgroundColor = [UIColor clearColor];
+    questLabel.font = [UIFont fontWithName:@"Helvetica" size:12.0];
+    questLabel.textColor = [UIColor whiteColor];
+    questLabel.textAlignment = UITextAlignmentCenter;
+    questLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    
+    titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 18, frame.size.width-10, frame.size.height-17)];
+    titleLabel.backgroundColor = [UIColor clearColor];
+    titleLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:16.0];
+    titleLabel.textColor = [UIColor whiteColor];
+    titleLabel.textAlignment = UITextAlignmentCenter;
+    titleLabel.numberOfLines = 0;
+    titleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+}
 
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        del = [[DetailLayerDelegate alloc] init];
-        backgroundLayer = [[CALayer layer] retain];
-        backgroundLayer.delegate = del;
-        backgroundLayer.frame = CGRectMake(0, 0, frame.size.width, frame.size.height-SHADOWSPACE);
-        backgroundLayer.shadowColor = [[UIColor blackColor] CGColor];
-        backgroundLayer.shadowOpacity = 1.0;
-        backgroundLayer.shadowOffset = CGSizeMake(0, 2);
-        backgroundLayer.shadowRadius = 3.0;
-        [backgroundLayer setContentsScale:[self contentScaleFactor]];
-        
-        [self.layer addSublayer:backgroundLayer];
-        self.backgroundColor = [UIColor clearColor];
-        
-        questLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 0, frame.size.width-10, 17)];
-        questLabel.backgroundColor = [UIColor clearColor];
-        questLabel.font = [UIFont fontWithName:@"Helvetica" size:12.0];
-        questLabel.textColor = [UIColor whiteColor];
-        questLabel.textAlignment = UITextAlignmentCenter;
-        questLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-        
-        titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 18, frame.size.width-10, frame.size.height-17)];
-        titleLabel.backgroundColor = [UIColor clearColor];
-        titleLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:16.0];
-        titleLabel.textColor = [UIColor whiteColor];
-        titleLabel.textAlignment = UITextAlignmentCenter;
-        titleLabel.numberOfLines = 0;
-        titleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        [self initVariablesWithFrame:frame];
+    }
+    return self;
+}
 
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        [self initVariablesWithFrame:CGRectZero];
     }
     return self;
 }
 
 - (void) dealloc {
-    backgroundLayer.delegate = nil;
-    [del release];
     [backgroundLayer release];
+    [del release];
     
     [questLabel release];
     [titleLabel release];
@@ -121,6 +131,7 @@ DetailLayerDelegate * del;
     [self setNeedsDisplay];
     
     titleLabel.frame = CGRectMake(15, 18, width-30, titleSize.height);
+    questLabel.frame = CGRectMake(5, 0, frame.size.width-10, 17);
     
     [self addSubview:titleLabel];
     [self addSubview:questLabel];

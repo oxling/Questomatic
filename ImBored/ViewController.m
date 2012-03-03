@@ -5,7 +5,7 @@
 //  ImBored
 //
 //  Created by Amy Dyer on 1/21/12.
-//  Copyright (c) 2012 Intuit. All rights reserved.
+//  Copyright (c) 2012 Amy Dyer. All rights reserved.
 //
 
 #import "ViewController.h"
@@ -17,11 +17,14 @@
 #import "LocationController.h"
 #import "QuestCalloutView.h"
 #import "QuestDetailView.h"
+#import "DetailViewController.h"
 
 @implementation ViewController
-@synthesize map, visibleQuest, userLocation, acceptedQuest, expandedView;
+@synthesize map, visibleQuest, userLocation, acceptedQuest;
 
 BOOL fireActivityTimer = NO;
+
+#pragma mark - Init and Memory
 
 - (void) initVariables { 
     locationController = [[LocationController alloc] init];
@@ -55,7 +58,6 @@ BOOL fireActivityTimer = NO;
     [acceptedQuest release];
     [overlayView release];
     [activityView release];
-    [expandedView release];
     
     [super dealloc];
 }
@@ -97,6 +99,16 @@ BOOL fireActivityTimer = NO;
 }
 
 #pragma mark - Accept quest
+
+- (void) displayActiveQuest {
+    if (acceptedQuest) {
+        [self.view addSubview:detailView];
+        [detailView setQuest:[NSString stringWithFormat:@"Your quest is to %@", [acceptedQuest getVerb]] withTitle:acceptedQuest.title];
+    } else {
+        [detailView removeFromSuperview];
+    }
+}
+
 - (void) setAcceptedQuest:(Quest *)newAcceptedQuest {
     if (newAcceptedQuest == acceptedQuest)
         return;
@@ -104,12 +116,7 @@ BOOL fireActivityTimer = NO;
     [acceptedQuest release];
     acceptedQuest = [newAcceptedQuest retain];
     
-    if (acceptedQuest) {
-        [self.view addSubview:detailView];
-        [detailView setQuest:[NSString stringWithFormat:@"Your quest is to %@", [acceptedQuest getVerb]] withTitle:acceptedQuest.title];
-    } else {
-        [detailView removeFromSuperview];
-    }
+    [self displayActiveQuest];
 }
 
 - (void) didAcceptQuest:(id)quest inView:(QuestCalloutView *)view {
@@ -120,8 +127,20 @@ BOOL fireActivityTimer = NO;
     [view updateButtonStyle:NO];
 }
 
+- (void) didTapCurrentQuest:(UITapGestureRecognizer *)tapper {
+    DetailViewController * detailVC = [[DetailViewController alloc] initWithNibName:@"DetailViewController" bundle:nil];
+    detailVC.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+    detailVC.quest = self.acceptedQuest;
+    [self presentModalViewController:detailVC animated:YES];
+    [detailVC release];
+}
+
 - (void) didTapCalloutView:(QuestCalloutView *)view {
     [map deselectAnnotation:view.annotation animated:YES];
+}
+
+- (void) didCancelQuest {
+    self.acceptedQuest = nil;
 }
 
 #pragma mark - Map
@@ -158,6 +177,7 @@ BOOL fireActivityTimer = NO;
             pin = [[[QuestCalloutView alloc] initWithAnnotation:annotation reuseIdentifier:identifer] autorelease];
         }
         
+        NSAssert([annotation isKindOfClass:[Quest class]], @"Set a non-quest annotation: %@", annotation);
         Quest * q = (Quest *)annotation;
         
         pin.annotation = annotation;
@@ -166,7 +186,15 @@ BOOL fireActivityTimer = NO;
         pin.questString = [UtilityKit capitalizeString:[q getVerb]];
         pin.htmlString = [q listings];
         pin.delegate = self;
-        pin.acceptButton.enabled = YES;
+        
+        if (q != acceptedQuest) {
+            pin.acceptButton.enabled = YES;
+            [pin updateButtonStyle:YES];
+        } else {
+            pin.acceptButton.enabled = NO;
+            [pin updateButtonStyle:NO];
+        }
+        
         [pin updateButtonStyle:YES];
         
         [pin updateFrameAndLabels];
@@ -240,40 +268,7 @@ BOOL fireActivityTimer = NO;
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [self becomeFirstResponder];
-
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
-    [locationController startUpdatingUserLocation:^(CLLocation *newLocation) {
-        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-        [locationController stopUpdatingUserLocation];
-
-        if (newLocation) {
-            map.centerCoordinate = newLocation.coordinate;
-            MKCoordinateSpan span = MKCoordinateSpanMake(0.03, 0.03);
-            
-            [map setRegion:MKCoordinateRegionMake(newLocation.coordinate, span) animated:YES];
-
-            Quest * loc = [[Quest alloc] init];
-            loc.title = @"Me";
-            loc.coordinate = newLocation.coordinate;
-            
-            self.userLocation = loc;
-            [loc release];
-            
-            fireActivityTimer = YES;
-            [self noActivity];
-            
-        } else {
-            CLLocationCoordinate2D coord =  CLLocationCoordinate2DMake(42.378075, -71.044464);
-            MKCoordinateSpan span = MKCoordinateSpanMake(0.20, 0.20);
-            [map setRegion:MKCoordinateRegionMake(coord, span) animated:YES];
-            
-            [[[[UIAlertView alloc] initWithTitle:@"GPS Problem" message:@"Unable to find your coordinates. Zoom in where you would like to search for a quest." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] autorelease] show];
-            
-            fireActivityTimer = YES;
-        }
-    }];
-    
+    [self becomeFirstResponder];    
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -304,15 +299,55 @@ BOOL fireActivityTimer = NO;
     fireActivityTimer = YES;
 }
 
+- (void) zoomToUserLocation {
+    
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+    
+    [locationController startUpdatingUserLocation:^(CLLocation *newLocation) {
+        
+        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+        [locationController stopUpdatingUserLocation];
+        
+        if (newLocation) {
+            map.centerCoordinate = newLocation.coordinate;
+            MKCoordinateSpan span = MKCoordinateSpanMake(0.03, 0.03);
+            
+            [map setRegion:MKCoordinateRegionMake(newLocation.coordinate, span) animated:YES];
+            
+            Quest * loc = [[Quest alloc] init];
+            loc.title = @"Me";
+            loc.coordinate = newLocation.coordinate;
+            
+            self.userLocation = loc;
+            [loc release];
+            
+            fireActivityTimer = YES;
+            [self noActivity];
+            
+        } else {
+            CLLocationCoordinate2D coord =  CLLocationCoordinate2DMake(42.378075, -71.044464); //Boston!
+            MKCoordinateSpan span = MKCoordinateSpanMake(0.20, 0.20);
+            [map setRegion:MKCoordinateRegionMake(coord, span) animated:YES];
+            
+            [[[[UIAlertView alloc] initWithTitle:@"GPS Problem" message:@"Unable to find your coordinates. Zoom in where you would like to search for a quest." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] autorelease] show];
+            
+            fireActivityTimer = YES;
+        }
+    }];
+}
+
 - (void) viewDidLoad {
     [super viewDidLoad];
-    
+        
     infoView = [[InfoView alloc] initWithFrame:CGRectMake(0, 0, 176, 126)];
     infoView.center = self.view.center;
     infoView.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin;
     
     detailView = [[QuestDetailView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 50)];
     detailView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    UITapGestureRecognizer * tapper = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapCurrentQuest:)];
+    [detailView addGestureRecognizer:tapper];
+    [tapper release];
     
     overlayView = [[UIView alloc] initWithFrame:self.view.frame];
     overlayView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -324,9 +359,17 @@ BOOL fireActivityTimer = NO;
     activityView.frame = [UtilityKit roundFrame:activityView.frame];
     activityView.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
     
-    [[NSBundle mainBundle] loadNibNamed:@"ExpandedDetailView" owner:self options:nil];
-    expandedView.frame = CGRectMake(0, 50, self.view.frame.size.width, self.view.frame.size.height - 50);
-    expandedView.delegate = self;
+    if (acceptedQuest) {
+        //In case the view unloaded...
+        map.centerCoordinate = acceptedQuest.coordinate;
+        MKCoordinateSpan span = MKCoordinateSpanMake(0.03, 0.03);
+        [map setRegion:MKCoordinateRegionMake(acceptedQuest.coordinate, span) animated:NO];
+        [map addAnnotation:acceptedQuest];
+
+        [self displayActiveQuest];
+    } else {
+        [self zoomToUserLocation];
+    }
 }
 
 - (void) viewDidUnload {
@@ -347,8 +390,6 @@ BOOL fireActivityTimer = NO;
     [activityView removeFromSuperview];
     [activityView release];
     activityView = nil;
-    
-    self.expandedView = nil;
 }
 
 @end

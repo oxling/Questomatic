@@ -7,14 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E143232F15028F2800FD6DED /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E143232E15028F2800FD6DED /* DetailViewController.m */; };
 		E1573B7914CC79AE004AEF21 /* LocationController.m in Sources */ = {isa = PBXBuildFile; fileRef = E1573B7814CC79AE004AEF21 /* LocationController.m */; };
 		E1573B7D14CC7CC8004AEF21 /* Quest.m in Sources */ = {isa = PBXBuildFile; fileRef = E1573B7C14CC7CC8004AEF21 /* Quest.m */; };
 		E1573B8014CC963D004AEF21 /* InfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = E1573B7F14CC963D004AEF21 /* InfoView.m */; };
 		E1573B8214CC9670004AEF21 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1573B8114CC9670004AEF21 /* QuartzCore.framework */; };
 		E1573B8514CCAC6A004AEF21 /* QuestCalloutView.m in Sources */ = {isa = PBXBuildFile; fileRef = E1573B8414CCAC6A004AEF21 /* QuestCalloutView.m */; };
 		E18E574414DE17F300597734 /* UtilityKit.m in Sources */ = {isa = PBXBuildFile; fileRef = E18E574314DE17F300597734 /* UtilityKit.m */; };
-		E19F3CD314DEEF2E00C0CF70 /* ExpandedDetailView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E19F3CD214DEEF2E00C0CF70 /* ExpandedDetailView.xib */; };
-		E19F3CD714DF453F00C0CF70 /* ExpandedDetailView.m in Sources */ = {isa = PBXBuildFile; fileRef = E19F3CD614DF453F00C0CF70 /* ExpandedDetailView.m */; };
 		E1AEEBAE14CB382200C14F98 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1AEEBAD14CB382200C14F98 /* UIKit.framework */; };
 		E1AEEBB014CB382200C14F98 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1AEEBAF14CB382200C14F98 /* Foundation.framework */; };
 		E1AEEBB214CB382200C14F98 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1AEEBB114CB382200C14F98 /* CoreGraphics.framework */; };
@@ -34,6 +33,7 @@
 		E1AEEBEB14CB581A00C14F98 /* MapAPIResultParser.m in Sources */ = {isa = PBXBuildFile; fileRef = E1AEEBEA14CB581A00C14F98 /* MapAPIResultParser.m */; };
 		E1AEEBED14CB965100C14F98 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1AEEBEC14CB965100C14F98 /* AddressBook.framework */; };
 		E1F0342C14D45B04000F8BDE /* QuestDetailView.m in Sources */ = {isa = PBXBuildFile; fileRef = E1F0342B14D45B04000F8BDE /* QuestDetailView.m */; };
+		E1F2F47A14EB212500EC1455 /* DetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E1F2F47914EB212500EC1455 /* DetailViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +47,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		E143232E15028F2800FD6DED /* DetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DetailViewController.m; sourceTree = "<group>"; };
 		E1573B7714CC79AE004AEF21 /* LocationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocationController.h; sourceTree = "<group>"; };
 		E1573B7814CC79AE004AEF21 /* LocationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationController.m; sourceTree = "<group>"; };
 		E1573B7B14CC7CC8004AEF21 /* Quest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Quest.h; sourceTree = "<group>"; };
@@ -58,9 +59,7 @@
 		E1573B8414CCAC6A004AEF21 /* QuestCalloutView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QuestCalloutView.m; sourceTree = "<group>"; };
 		E18E574214DE17F300597734 /* UtilityKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UtilityKit.h; sourceTree = "<group>"; };
 		E18E574314DE17F300597734 /* UtilityKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UtilityKit.m; sourceTree = "<group>"; };
-		E19F3CD214DEEF2E00C0CF70 /* ExpandedDetailView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ExpandedDetailView.xib; sourceTree = "<group>"; };
-		E19F3CD514DF453F00C0CF70 /* ExpandedDetailView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExpandedDetailView.h; sourceTree = "<group>"; };
-		E19F3CD614DF453F00C0CF70 /* ExpandedDetailView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExpandedDetailView.m; sourceTree = "<group>"; };
+		E19F3CD514DF453F00C0CF70 /* DetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailViewController.h; sourceTree = "<group>"; };
 		E1AEEBA914CB382200C14F98 /* Questomatic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Questomatic.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1AEEBAD14CB382200C14F98 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		E1AEEBAF14CB382200C14F98 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -89,6 +88,7 @@
 		E1AEEBEC14CB965100C14F98 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		E1F0342A14D45B04000F8BDE /* QuestDetailView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QuestDetailView.h; sourceTree = "<group>"; };
 		E1F0342B14D45B04000F8BDE /* QuestDetailView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QuestDetailView.m; sourceTree = "<group>"; };
+		E1F2F47914EB212500EC1455 /* DetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DetailViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -122,6 +122,9 @@
 		E14E4C5314CCE42F00CB5A67 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				E1F2F47914EB212500EC1455 /* DetailViewController.xib */,
+				E19F3CD514DF453F00C0CF70 /* DetailViewController.h */,
+				E143232E15028F2800FD6DED /* DetailViewController.m */,
 				E1AEEBBF14CB382200C14F98 /* ViewController.h */,
 				E1AEEBC014CB382200C14F98 /* ViewController.m */,
 				E1AEEBC214CB382200C14F98 /* ViewController.xib */,
@@ -138,9 +141,6 @@
 				E1573B7F14CC963D004AEF21 /* InfoView.m */,
 				E1F0342A14D45B04000F8BDE /* QuestDetailView.h */,
 				E1F0342B14D45B04000F8BDE /* QuestDetailView.m */,
-				E19F3CD514DF453F00C0CF70 /* ExpandedDetailView.h */,
-				E19F3CD614DF453F00C0CF70 /* ExpandedDetailView.m */,
-				E19F3CD214DEEF2E00C0CF70 /* ExpandedDetailView.xib */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -304,7 +304,7 @@
 			files = (
 				E1AEEBB814CB382200C14F98 /* InfoPlist.strings in Resources */,
 				E1AEEBC414CB382200C14F98 /* ViewController.xib in Resources */,
-				E19F3CD314DEEF2E00C0CF70 /* ExpandedDetailView.xib in Resources */,
+				E1F2F47A14EB212500EC1455 /* DetailViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -350,7 +350,7 @@
 				E1573B8514CCAC6A004AEF21 /* QuestCalloutView.m in Sources */,
 				E1F0342C14D45B04000F8BDE /* QuestDetailView.m in Sources */,
 				E18E574414DE17F300597734 /* UtilityKit.m in Sources */,
-				E19F3CD714DF453F00C0CF70 /* ExpandedDetailView.m in Sources */,
+				E143232F15028F2800FD6DED /* DetailViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
