@@ -8,13 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> expandedview
-=======
->>>>>>> expandedview
 @protocol ExpandedDetailViewDelegate <NSObject>
 
 @optional
@@ -29,24 +22,17 @@
     UIImageView * imageView;
     
     id <ExpandedDetailViewDelegate> delegate;
+    id quest;
 }
 
 @property (nonatomic, retain) IBOutlet UITextView * addressTextView;
 @property (nonatomic, retain) IBOutlet UIImageView * imageView;
 
 @property (nonatomic, assign) id <ExpandedDetailViewDelegate> delegate;
+@property (nonatomic, retain) id quest;
 
 - (IBAction)didTapComplete:(id)sender;
 - (IBAction)didTapCancel:(id)sender;
 - (IBAction)didTapViewMap:(id)sender;
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-@interface ExpandedDetailView : UIView
->>>>>>> 6ba3996... Ignoring more files...
-=======
->>>>>>> expandedview
-=======
->>>>>>> expandedview
 
 @end

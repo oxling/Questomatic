@@ -32,6 +32,7 @@
     LocationController * locationController;
     InfoView * infoView;
     QuestDetailView * detailView;
+    
     ExpandedDetailView * expandedView;
     
     UIView * overlayView;
