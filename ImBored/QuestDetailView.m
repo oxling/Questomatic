@@ -65,10 +65,10 @@
 @end
 
 @implementation QuestDetailView
-DetailLayerDelegate * del;
 
 - (void) initVariablesWithFrame:(CGRect)frame {
     del = [[DetailLayerDelegate alloc] init];
+    
     backgroundLayer = [[CALayer layer] retain];
     backgroundLayer.delegate = del;
     backgroundLayer.frame = CGRectMake(0, 0, frame.size.width, frame.size.height-SHADOWSPACE);
@@ -114,9 +114,8 @@ DetailLayerDelegate * del;
 }
 
 - (void) dealloc {
-    backgroundLayer.delegate = nil;
-    [del release];
     [backgroundLayer release];
+    [del release];
     
     [questLabel release];
     [titleLabel release];

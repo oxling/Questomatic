@@ -144,7 +144,7 @@
 
 - (NSURL *) getLink {
     CLLocationCoordinate2D coord = self.coordinate;
-    NSString * urlStr = [NSString stringWithFormat:@"https://maps.google.com/maps?ll=%d,%d", coord.latitude, coord.longitude];
+    NSString * urlStr = [NSString stringWithFormat:@"https://maps.google.com/maps?ll=%f,%f", coord.latitude, coord.longitude];
     return [NSURL URLWithString:urlStr];
 }
 

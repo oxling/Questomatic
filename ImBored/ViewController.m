@@ -99,6 +99,16 @@ BOOL fireActivityTimer = NO;
 }
 
 #pragma mark - Accept quest
+
+- (void) displayActiveQuest {
+    if (acceptedQuest) {
+        [self.view addSubview:detailView];
+        [detailView setQuest:[NSString stringWithFormat:@"Your quest is to %@", [acceptedQuest getVerb]] withTitle:acceptedQuest.title];
+    } else {
+        [detailView removeFromSuperview];
+    }
+}
+
 - (void) setAcceptedQuest:(Quest *)newAcceptedQuest {
     if (newAcceptedQuest == acceptedQuest)
         return;
@@ -106,12 +116,7 @@ BOOL fireActivityTimer = NO;
     [acceptedQuest release];
     acceptedQuest = [newAcceptedQuest retain];
     
-    if (acceptedQuest) {
-        [self.view addSubview:detailView];
-        [detailView setQuest:[NSString stringWithFormat:@"Your quest is to %@", [acceptedQuest getVerb]] withTitle:acceptedQuest.title];
-    } else {
-        [detailView removeFromSuperview];
-    }
+    [self displayActiveQuest];
 }
 
 - (void) didAcceptQuest:(id)quest inView:(QuestCalloutView *)view {
@@ -172,6 +177,7 @@ BOOL fireActivityTimer = NO;
             pin = [[[QuestCalloutView alloc] initWithAnnotation:annotation reuseIdentifier:identifer] autorelease];
         }
         
+        NSAssert([annotation isKindOfClass:[Quest class]], @"Set a non-quest annotation: %@", annotation);
         Quest * q = (Quest *)annotation;
         
         pin.annotation = annotation;
@@ -180,7 +186,15 @@ BOOL fireActivityTimer = NO;
         pin.questString = [UtilityKit capitalizeString:[q getVerb]];
         pin.htmlString = [q listings];
         pin.delegate = self;
-        pin.acceptButton.enabled = YES;
+        
+        if (q != acceptedQuest) {
+            pin.acceptButton.enabled = YES;
+            [pin updateButtonStyle:YES];
+        } else {
+            pin.acceptButton.enabled = NO;
+            [pin updateButtonStyle:NO];
+        }
+        
         [pin updateButtonStyle:YES];
         
         [pin updateFrameAndLabels];
@@ -254,40 +268,7 @@ BOOL fireActivityTimer = NO;
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [self becomeFirstResponder];
-
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
-    [locationController startUpdatingUserLocation:^(CLLocation *newLocation) {
-        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-        [locationController stopUpdatingUserLocation];
-
-        if (newLocation) {
-            map.centerCoordinate = newLocation.coordinate;
-            MKCoordinateSpan span = MKCoordinateSpanMake(0.03, 0.03);
-            
-            [map setRegion:MKCoordinateRegionMake(newLocation.coordinate, span) animated:YES];
-
-            Quest * loc = [[Quest alloc] init];
-            loc.title = @"Me";
-            loc.coordinate = newLocation.coordinate;
-            
-            self.userLocation = loc;
-            [loc release];
-            
-            fireActivityTimer = YES;
-            [self noActivity];
-            
-        } else {
-            CLLocationCoordinate2D coord =  CLLocationCoordinate2DMake(42.378075, -71.044464);
-            MKCoordinateSpan span = MKCoordinateSpanMake(0.20, 0.20);
-            [map setRegion:MKCoordinateRegionMake(coord, span) animated:YES];
-            
-            [[[[UIAlertView alloc] initWithTitle:@"GPS Problem" message:@"Unable to find your coordinates. Zoom in where you would like to search for a quest." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] autorelease] show];
-            
-            fireActivityTimer = YES;
-        }
-    }];
-    
+    [self becomeFirstResponder];    
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -318,9 +299,46 @@ BOOL fireActivityTimer = NO;
     fireActivityTimer = YES;
 }
 
+- (void) zoomToUserLocation {
+    
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+    
+    [locationController startUpdatingUserLocation:^(CLLocation *newLocation) {
+        
+        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+        [locationController stopUpdatingUserLocation];
+        
+        if (newLocation) {
+            map.centerCoordinate = newLocation.coordinate;
+            MKCoordinateSpan span = MKCoordinateSpanMake(0.03, 0.03);
+            
+            [map setRegion:MKCoordinateRegionMake(newLocation.coordinate, span) animated:YES];
+            
+            Quest * loc = [[Quest alloc] init];
+            loc.title = @"Me";
+            loc.coordinate = newLocation.coordinate;
+            
+            self.userLocation = loc;
+            [loc release];
+            
+            fireActivityTimer = YES;
+            [self noActivity];
+            
+        } else {
+            CLLocationCoordinate2D coord =  CLLocationCoordinate2DMake(42.378075, -71.044464); //Boston!
+            MKCoordinateSpan span = MKCoordinateSpanMake(0.20, 0.20);
+            [map setRegion:MKCoordinateRegionMake(coord, span) animated:YES];
+            
+            [[[[UIAlertView alloc] initWithTitle:@"GPS Problem" message:@"Unable to find your coordinates. Zoom in where you would like to search for a quest." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] autorelease] show];
+            
+            fireActivityTimer = YES;
+        }
+    }];
+}
+
 - (void) viewDidLoad {
     [super viewDidLoad];
-    
+        
     infoView = [[InfoView alloc] initWithFrame:CGRectMake(0, 0, 176, 126)];
     infoView.center = self.view.center;
     infoView.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin;
@@ -340,6 +358,18 @@ BOOL fireActivityTimer = NO;
     activityView.center = overlayView.center;
     activityView.frame = [UtilityKit roundFrame:activityView.frame];
     activityView.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+    
+    if (acceptedQuest) {
+        //In case the view unloaded...
+        map.centerCoordinate = acceptedQuest.coordinate;
+        MKCoordinateSpan span = MKCoordinateSpanMake(0.03, 0.03);
+        [map setRegion:MKCoordinateRegionMake(acceptedQuest.coordinate, span) animated:NO];
+        [map addAnnotation:acceptedQuest];
+
+        [self displayActiveQuest];
+    } else {
+        [self zoomToUserLocation];
+    }
 }
 
 - (void) viewDidUnload {

@@ -24,9 +24,23 @@
 
 - (void) viewDidLoad {
     [questView setQuest:[NSString stringWithFormat:@"Your quest is to %@", [quest getVerb]] withTitle:quest.title];
-    [questView setNeedsDisplay];
+    UITapGestureRecognizer * tapper = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapBack:)];
+    [questView addGestureRecognizer:tapper];
+    [tapper release];
     
     addressTextView.text = quest.address;
+}
+
+- (void) viewDidUnload {
+    [super viewDidUnload];
+    
+    self.questView = nil;
+    self.addressTextView = nil;
+    self.imageView = nil;
+}
+
+- (void) didTapBack:(UITapGestureRecognizer *)tapper {
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 - (void) didTapCancel:(id)sender {

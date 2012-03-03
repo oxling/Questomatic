@@ -8,10 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
+@class DetailLayerDelegate;
 @interface QuestDetailView : UIView {
     CALayer * backgroundLayer;
     UILabel * questLabel;
     UILabel * titleLabel;
+    
+    DetailLayerDelegate * del;
 }
 
 - (void) setQuest:(NSString *)questString withTitle:(NSString *)titleString;
