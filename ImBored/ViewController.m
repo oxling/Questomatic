@@ -5,7 +5,7 @@
 //  ImBored
 //
 //  Created by Amy Dyer on 1/21/12.
-//  Copyright (c) 2012 Intuit. All rights reserved.
+//  Copyright (c) 2012 Amy Dyer. All rights reserved.
 //
 
 #import "ViewController.h"
@@ -17,9 +17,10 @@
 #import "LocationController.h"
 #import "QuestCalloutView.h"
 #import "QuestDetailView.h"
+#import "DetailViewController.h"
 
 @implementation ViewController
-@synthesize map, visibleQuest, userLocation, acceptedQuest, expandedView;
+@synthesize map, visibleQuest, userLocation, acceptedQuest;
 
 BOOL fireActivityTimer = NO;
 
@@ -57,7 +58,6 @@ BOOL fireActivityTimer = NO;
     [acceptedQuest release];
     [overlayView release];
     [activityView release];
-    [expandedView release];
     
     [super dealloc];
 }
@@ -122,25 +122,20 @@ BOOL fireActivityTimer = NO;
     [view updateButtonStyle:NO];
 }
 
+- (void) didTapCurrentQuest:(UITapGestureRecognizer *)tapper {
+    DetailViewController * detailVC = [[DetailViewController alloc] initWithNibName:@"DetailViewController" bundle:nil];
+    detailVC.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+    detailVC.quest = self.acceptedQuest;
+    [self presentModalViewController:detailVC animated:YES];
+    [detailVC release];
+}
+
 - (void) didTapCalloutView:(QuestCalloutView *)view {
     [map deselectAnnotation:view.annotation animated:YES];
 }
 
 - (void) didCancelQuest {
     self.acceptedQuest = nil;
-}
-
-- (void) didViewQuest {
-    [[UIApplication sharedApplication] openURL:[acceptedQuest getLink]];
-}
-
-- (void) didCompleteQuest {
-    
-}
-
-- (void) didTapCurrentQuest:(UITapGestureRecognizer *)tapper {
-    expandedView.hidden = NO;
-    expandedView.quest = acceptedQuest;
 }
 
 #pragma mark - Map
@@ -345,16 +340,6 @@ BOOL fireActivityTimer = NO;
     activityView.center = overlayView.center;
     activityView.frame = [UtilityKit roundFrame:activityView.frame];
     activityView.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
-    
-    NSArray * comps = [[NSBundle mainBundle] loadNibNamed:@"ExpandedDetailView" owner:nil options:nil];
-    NSAssert([comps count]>0, @"No components loaded");
-    NSAssert([[comps objectAtIndex:0] isKindOfClass:[ExpandedDetailView class]], @"Nib loaded incorrect component %@", [comps objectAtIndex:0]);
-    self.expandedView = [comps objectAtIndex:0];
-    expandedView.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
-    expandedView.delegate = self;
-    expandedView.hidden = YES;
-    [self.view addSubview:expandedView];
-
 }
 
 - (void) viewDidUnload {
@@ -375,8 +360,6 @@ BOOL fireActivityTimer = NO;
     [activityView removeFromSuperview];
     [activityView release];
     activityView = nil;
-    
-    self.expandedView = nil;
 }
 
 @end

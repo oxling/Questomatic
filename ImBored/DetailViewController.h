@@ -3,33 +3,24 @@
 //  ImBored
 //
 //  Created by Amy Dyer on 2/5/12.
-//  Copyright (c) 2012 Intuit. All rights reserved.
+//  Copyright (c) 2012 Amy Dyer. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 
-@protocol ExpandedDetailViewDelegate <NSObject>
-
-@optional
-- (void) didCompleteQuest;
-- (void) didCancelQuest;
-- (void) didViewQuest;
-
-@end
-
-@interface ExpandedDetailView : UIView {
+@class QuestDetailView, Quest;
+@interface DetailViewController : UIViewController {
     UITextView * addressTextView;
     UIImageView * imageView;
+    QuestDetailView * questView;
     
-    id <ExpandedDetailViewDelegate> delegate;
-    id quest;
+    Quest * quest;
 }
 
 @property (nonatomic, retain) IBOutlet UITextView * addressTextView;
 @property (nonatomic, retain) IBOutlet UIImageView * imageView;
-
-@property (nonatomic, assign) id <ExpandedDetailViewDelegate> delegate;
-@property (nonatomic, retain) id quest;
+@property (nonatomic, retain) IBOutlet QuestDetailView * questView;
+@property (nonatomic, retain) Quest * quest;
 
 - (IBAction)didTapComplete:(id)sender;
 - (IBAction)didTapCancel:(id)sender;

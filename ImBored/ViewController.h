@@ -3,7 +3,7 @@
 //  ImBored
 //
 //  Created by Amy Dyer on 1/21/12.
-//  Copyright (c) 2012 Intuit. All rights reserved.
+//  Copyright (c) 2012 Amy Dyer. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
@@ -19,9 +19,9 @@
 #import "InfoView.h"
 #import "QuestDetailView.h"
 #import "QuestCalloutView.h"
-#import "ExpandedDetailView.h"
+#import "DetailViewController.h"
 
-@interface ViewController : UIViewController <MKMapViewDelegate, UIActionSheetDelegate, QuestCalloutDelegate, ExpandedDetailViewDelegate> {
+@interface ViewController : UIViewController <MKMapViewDelegate, UIActionSheetDelegate, QuestCalloutDelegate> {
     MKMapView * map;
     UIButton * button;
     
@@ -33,15 +33,12 @@
     InfoView * infoView;
     QuestDetailView * detailView;
     
-    ExpandedDetailView * expandedView;
-    
     UIView * overlayView;
     UIActivityIndicatorView * activityView;
     
     NSTimer * actionTimer;
 }
 @property (nonatomic, retain) IBOutlet MKMapView * map;
-@property (nonatomic, retain) IBOutlet ExpandedDetailView * expandedView;
 @property (nonatomic, retain) Quest * visibleQuest;
 @property (nonatomic, retain) Quest * userLocation;
 @property (nonatomic, retain) Quest * acceptedQuest;

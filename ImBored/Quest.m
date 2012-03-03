@@ -3,7 +3,7 @@
 //  ImBored
 //
 //  Created by Amy Dyer on 1/22/12.
-//  Copyright (c) 2012 Intuit. All rights reserved.
+//  Copyright (c) 2012 Amy Dyer. All rights reserved.
 //
 
 #import "Quest.h"
