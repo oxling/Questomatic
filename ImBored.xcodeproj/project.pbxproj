@@ -13,6 +13,9 @@
 		E1573B8014CC963D004AEF21 /* InfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = E1573B7F14CC963D004AEF21 /* InfoView.m */; };
 		E1573B8214CC9670004AEF21 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1573B8114CC9670004AEF21 /* QuartzCore.framework */; };
 		E1573B8514CCAC6A004AEF21 /* QuestCalloutView.m in Sources */ = {isa = PBXBuildFile; fileRef = E1573B8414CCAC6A004AEF21 /* QuestCalloutView.m */; };
+		E17B51111532588100993443 /* TriangleView.m in Sources */ = {isa = PBXBuildFile; fileRef = E17B51101532588100993443 /* TriangleView.m */; };
+		E17B511415326A2000993443 /* MapAPIDetailParser.m in Sources */ = {isa = PBXBuildFile; fileRef = E17B511315326A2000993443 /* MapAPIDetailParser.m */; };
+		E17B511715339D1000993443 /* BaseXMLParser.m in Sources */ = {isa = PBXBuildFile; fileRef = E17B511615339D1000993443 /* BaseXMLParser.m */; };
 		E18E574414DE17F300597734 /* UtilityKit.m in Sources */ = {isa = PBXBuildFile; fileRef = E18E574314DE17F300597734 /* UtilityKit.m */; };
 		E1AEEBAE14CB382200C14F98 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1AEEBAD14CB382200C14F98 /* UIKit.framework */; };
 		E1AEEBB014CB382200C14F98 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1AEEBAF14CB382200C14F98 /* Foundation.framework */; };
@@ -57,6 +60,12 @@
 		E1573B8114CC9670004AEF21 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		E1573B8314CCAC6A004AEF21 /* QuestCalloutView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QuestCalloutView.h; sourceTree = "<group>"; };
 		E1573B8414CCAC6A004AEF21 /* QuestCalloutView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QuestCalloutView.m; sourceTree = "<group>"; };
+		E17B510F1532588100993443 /* TriangleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TriangleView.h; sourceTree = "<group>"; };
+		E17B51101532588100993443 /* TriangleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TriangleView.m; sourceTree = "<group>"; };
+		E17B511215326A2000993443 /* MapAPIDetailParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapAPIDetailParser.h; sourceTree = "<group>"; };
+		E17B511315326A2000993443 /* MapAPIDetailParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapAPIDetailParser.m; sourceTree = "<group>"; };
+		E17B511515339D0F00993443 /* BaseXMLParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseXMLParser.h; sourceTree = "<group>"; };
+		E17B511615339D1000993443 /* BaseXMLParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseXMLParser.m; sourceTree = "<group>"; };
 		E18E574214DE17F300597734 /* UtilityKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UtilityKit.h; sourceTree = "<group>"; };
 		E18E574314DE17F300597734 /* UtilityKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UtilityKit.m; sourceTree = "<group>"; };
 		E19F3CD514DF453F00C0CF70 /* DetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailViewController.h; sourceTree = "<group>"; };
@@ -135,6 +144,8 @@
 		E14E4C5414CCE44700CB5A67 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				E17B510F1532588100993443 /* TriangleView.h */,
+				E17B51101532588100993443 /* TriangleView.m */,
 				E1573B8314CCAC6A004AEF21 /* QuestCalloutView.h */,
 				E1573B8414CCAC6A004AEF21 /* QuestCalloutView.m */,
 				E1573B7E14CC963D004AEF21 /* InfoView.h */,
@@ -192,8 +203,12 @@
 				E1573B7814CC79AE004AEF21 /* LocationController.m */,
 				E1AEEBE614CB505B00C14F98 /* MapAPIController.h */,
 				E1AEEBE714CB505B00C14F98 /* MapAPIController.m */,
+				E17B511515339D0F00993443 /* BaseXMLParser.h */,
+				E17B511615339D1000993443 /* BaseXMLParser.m */,
 				E1AEEBE914CB581A00C14F98 /* MapAPIResultParser.h */,
 				E1AEEBEA14CB581A00C14F98 /* MapAPIResultParser.m */,
+				E17B511215326A2000993443 /* MapAPIDetailParser.h */,
+				E17B511315326A2000993443 /* MapAPIDetailParser.m */,
 				E18E574214DE17F300597734 /* UtilityKit.h */,
 				E18E574314DE17F300597734 /* UtilityKit.m */,
 				E1AEEBB414CB382200C14F98 /* Supporting Files */,
@@ -351,6 +366,9 @@
 				E1F0342C14D45B04000F8BDE /* QuestDetailView.m in Sources */,
 				E18E574414DE17F300597734 /* UtilityKit.m in Sources */,
 				E143232F15028F2800FD6DED /* DetailViewController.m in Sources */,
+				E17B51111532588100993443 /* TriangleView.m in Sources */,
+				E17B511415326A2000993443 /* MapAPIDetailParser.m in Sources */,
+				E17B511715339D1000993443 /* BaseXMLParser.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

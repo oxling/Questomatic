@@ -8,16 +8,19 @@
 
 #import <UIKit/UIKit.h>
 
-@class DetailLayerDelegate;
+@class DetailLayerDelegate, TriangleView;
 @interface QuestDetailView : UIView {
     CALayer * backgroundLayer;
     UILabel * questLabel;
     UILabel * titleLabel;
     
     DetailLayerDelegate * del;
+    TriangleView * triangle;
 }
 
 - (void) setQuest:(NSString *)questString withTitle:(NSString *)titleString;
+- (void) setShowsRightTriangle:(BOOL)showTriangle;
+- (void) setShowsLeftTriangle:(BOOL)showTriangle;
 
 
 @end

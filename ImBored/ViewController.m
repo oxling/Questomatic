@@ -18,6 +18,7 @@
 #import "QuestCalloutView.h"
 #import "QuestDetailView.h"
 #import "DetailViewController.h"
+#import "TriangleView.h"
 
 @implementation ViewController
 @synthesize map, visibleQuest, userLocation, acceptedQuest;
@@ -69,6 +70,9 @@ BOOL fireActivityTimer = NO;
     return [NSString stringWithFormat:@"Shake your %@ to find a new quest on the map", device];
 }
 
+/* The activity timer generates the nag message telling the user to shake their iPhone
+ if they haven't done anything in at least 30 seconds. */
+
 - (void) activityOccured {
     if (fireActivityTimer) {
         [actionTimer invalidate];
@@ -87,6 +91,7 @@ BOOL fireActivityTimer = NO;
     infoView.label.text = [self labelString];
 }
 
+//Look for phone shakes
 - (void) motionEnded:(UIEventSubtype)motion withEvent:(UIEvent *)event {
     if (event.subtype == UIEventSubtypeMotionShake) {
         [self didTapRandom];
@@ -104,6 +109,7 @@ BOOL fireActivityTimer = NO;
     if (acceptedQuest) {
         [self.view addSubview:detailView];
         [detailView setQuest:[NSString stringWithFormat:@"Your quest is to %@", [acceptedQuest getVerb]] withTitle:acceptedQuest.title];
+        [detailView setShowsRightTriangle:YES];
     } else {
         [detailView removeFromSuperview];
     }
@@ -143,7 +149,7 @@ BOOL fireActivityTimer = NO;
     self.acceptedQuest = nil;
 }
 
-#pragma mark - Map
+#pragma mark - MapView delegate methods
 
 - (void)mapView:(MKMapView *)mapView regionWillChangeAnimated:(BOOL)animated {
     [self activityOccured];
@@ -203,24 +209,7 @@ BOOL fireActivityTimer = NO;
     } else return nil;
 }
 
-- (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control {
-    UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Open in Maps", nil];
-    [sheet showInView:self.view];
-    [sheet release];
-}
-
-- (void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (buttonIndex == [actionSheet cancelButtonIndex]) {
-        return;
-    } else {
-        CLLocationCoordinate2D newCoord = [self.visibleQuest coordinate];
-        CLLocationCoordinate2D oldCoord = [map.userLocation coordinate];
-        NSString * urlStr = [NSString stringWithFormat:@"http://maps.google.com/?saddr=%f,%f&daddr=%f,%f", 
-                             oldCoord.latitude, oldCoord.longitude,
-                             newCoord.latitude, newCoord.longitude];
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlStr]];
-    }
-}
+#pragma mark - Loading
 
 - (void) showLoadingOverlay {
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
@@ -237,6 +226,7 @@ BOOL fireActivityTimer = NO;
     [activityView removeFromSuperview];
 }
 
+#pragma mark - Locations
 
 - (void) generateRandomLocation {
     [self showLoadingOverlay];
@@ -257,6 +247,43 @@ BOOL fireActivityTimer = NO;
                                       [map selectAnnotation:self.visibleQuest animated:NO];
                                       [self hideLoadingOverlay];
                                   }];        
+}
+
+- (void) zoomToUserLocation {
+    
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+    
+    [locationController startUpdatingUserLocation:^(CLLocation *newLocation) {
+        
+        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+        [locationController stopUpdatingUserLocation];
+        
+        if (newLocation) {
+            map.centerCoordinate = newLocation.coordinate;
+            MKCoordinateSpan span = MKCoordinateSpanMake(0.03, 0.03);
+            
+            [map setRegion:MKCoordinateRegionMake(newLocation.coordinate, span) animated:YES];
+            
+            Quest * loc = [[Quest alloc] init];
+            loc.title = @"Me";
+            loc.coordinate = newLocation.coordinate;
+            
+            self.userLocation = loc;
+            [loc release];
+            
+            fireActivityTimer = YES;
+            [self noActivity];
+            
+        } else {
+            CLLocationCoordinate2D coord =  CLLocationCoordinate2DMake(42.378075, -71.044464); //Boston!
+            MKCoordinateSpan span = MKCoordinateSpanMake(0.20, 0.20);
+            [map setRegion:MKCoordinateRegionMake(coord, span) animated:YES];
+            
+            [[[[UIAlertView alloc] initWithTitle:@"GPS Problem" message:@"Unable to find your coordinates. Zoom in where you would like to search for a quest." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] autorelease] show];
+            
+            fireActivityTimer = YES;
+        }
+    }];
 }
 
 - (void) didTapRandom {
@@ -299,43 +326,6 @@ BOOL fireActivityTimer = NO;
     fireActivityTimer = YES;
 }
 
-- (void) zoomToUserLocation {
-    
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
-    
-    [locationController startUpdatingUserLocation:^(CLLocation *newLocation) {
-        
-        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-        [locationController stopUpdatingUserLocation];
-        
-        if (newLocation) {
-            map.centerCoordinate = newLocation.coordinate;
-            MKCoordinateSpan span = MKCoordinateSpanMake(0.03, 0.03);
-            
-            [map setRegion:MKCoordinateRegionMake(newLocation.coordinate, span) animated:YES];
-            
-            Quest * loc = [[Quest alloc] init];
-            loc.title = @"Me";
-            loc.coordinate = newLocation.coordinate;
-            
-            self.userLocation = loc;
-            [loc release];
-            
-            fireActivityTimer = YES;
-            [self noActivity];
-            
-        } else {
-            CLLocationCoordinate2D coord =  CLLocationCoordinate2DMake(42.378075, -71.044464); //Boston!
-            MKCoordinateSpan span = MKCoordinateSpanMake(0.20, 0.20);
-            [map setRegion:MKCoordinateRegionMake(coord, span) animated:YES];
-            
-            [[[[UIAlertView alloc] initWithTitle:@"GPS Problem" message:@"Unable to find your coordinates. Zoom in where you would like to search for a quest." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] autorelease] show];
-            
-            fireActivityTimer = YES;
-        }
-    }];
-}
-
 - (void) viewDidLoad {
     [super viewDidLoad];
         
@@ -360,7 +350,7 @@ BOOL fireActivityTimer = NO;
     activityView.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
     
     if (acceptedQuest) {
-        //In case the view unloaded...
+        //There will be an accepted quest if the view was unloaded
         map.centerCoordinate = acceptedQuest.coordinate;
         MKCoordinateSpan span = MKCoordinateSpanMake(0.03, 0.03);
         [map setRegion:MKCoordinateRegionMake(acceptedQuest.coordinate, span) animated:NO];

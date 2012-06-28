@@ -9,63 +9,47 @@
 #import "Quest.h"
 
 @implementation Quest
-@synthesize latitude, longitude, name, address, types, title, subtitle, coordinate, listings;
+@synthesize coordinate = _coordinate, title = _title, subtitle = _subtitle;
+@synthesize name = _name, address = _address, types = _types, listings = _listings, iconURL = _iconURL, reference = _reference;
+@synthesize websiteURL = _websiteURL;
 
 - (id) init {
     self = [super init];
     if (self) {
-        latitude = [[NSMutableString alloc] init];
-        longitude = [[NSMutableString alloc] init];
-        name = [[NSMutableString alloc] init];
-        address = [[NSMutableString alloc] init];
-        types = [[NSMutableArray alloc] init];
-        listings = [[NSMutableString alloc] init];
+        _types = [[NSMutableArray alloc] init];
     }
     return self;
 }
 
 - (void) dealloc{
-    [title release];
-    [subtitle release];
-    [latitude release];
-    [longitude release];
-    [name release];
-    [address release];
-    [types release];
-    [listings release];
-    [verb release];
+    [_title release];
+    [_subtitle release];
+    [_name release];
+    [_address release];
+    [_types release];
+    [_listings release];
+    [_iconURL release];
+    [_reference release];
+    [_verb release];
+    [_websiteURL release];
     
     [super dealloc];
 }
 
-- (CLLocationCoordinate2D) coordinate {
-    if (coordinate.latitude !=  0 && coordinate.longitude != 0) {
-        return coordinate;
+- (NSString *) title {
+    if (!_title) {
+        return _name;
     } else {
-        NSNumberFormatter * f = [[NSNumberFormatter alloc] init];
-        NSNumber * latNumber = [f numberFromString:latitude];
-        NSNumber * longNumber = [f numberFromString:longitude];
-        
-        CLLocationDegrees lat = [latNumber doubleValue];
-        CLLocationDegrees lng = [longNumber doubleValue];
-        
-        [f release];
-        
-        CLLocationCoordinate2D newCoordinate = CLLocationCoordinate2DMake(lat, lng);
-        return newCoordinate;
+        return _title;
     }
 }
 
-- (NSString *) title {
-    if (!title) {
-        return [NSString stringWithString:name];
-    } else return title;
-}
-
 - (NSString *) subtitle {
-    if (!subtitle) {
-        return [NSString stringWithString:address];
-    } else return subtitle;
+    if (!_subtitle) {
+        return _address;
+    } else {
+        return _subtitle;
+    }
 }
 
 - (NSString *) verbForType:(NSString *)type {
@@ -126,20 +110,21 @@
 }
 
 - (NSString *) getVerb {
-    if (verb) return verb;
+    if (_verb) 
+        return _verb;
     
     
-    verb = [UtilityKit randomItem:@"visit", @"see", @"go to", nil];
-    for (NSString * type in types) {
+    _verb = [UtilityKit randomItem:@"visit", @"see", @"go to", nil];
+    for (NSString * type in _types) {
         NSString * newVerb = [self verbForType:type];
         if (newVerb) {
-            verb = newVerb;
+            _verb = newVerb;
             break;
         }
     }
     
-    [verb retain];    
-    return verb;
+    [_verb retain];    
+    return _verb;
 }
 
 - (NSURL *) getLink {

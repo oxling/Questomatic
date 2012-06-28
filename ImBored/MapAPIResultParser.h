@@ -8,21 +8,16 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
+#import "BaseXMLParser.h"
 
 #import "Quest.h"
 
-typedef void (^ParseCompleteBlock)(NSArray * places);
-typedef void (^FailBlock)();
-
-@interface MapAPIResultParser : NSObject <NSXMLParserDelegate> {    
-    Quest * result;
-    NSString * element;
+@interface MapAPIResultParser : BaseXMLParser {    
+    Quest * _result;
     NSMutableArray * resultArray;
 }
 
-@property (nonatomic, retain) Quest * result;
-@property (nonatomic, retain) NSString * element;
 
-- (NSArray *) parseResults:(NSData *)data;
+- (NSArray *) parseLocationResults:(NSData *) data;
 
 @end

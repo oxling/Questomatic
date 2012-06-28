@@ -28,7 +28,10 @@ typedef void (^QuestLocationBlock)(Quest * location);
 
 - (void) startUpdatingUserLocation:(FoundLocationBlock)onComplete;
 - (void) stopUpdatingUserLocation;
-- (void) randomLocationNear:(CLLocationCoordinate2D)center latitudeRange:(CLLocationDegrees)latDiff longitudeRange:(CLLocationDegrees)longDiff complete:(QuestLocationBlock)onComplete;
+- (void) randomLocationNear:(CLLocationCoordinate2D)center 
+              latitudeRange:(CLLocationDegrees)latDiff 
+             longitudeRange:(CLLocationDegrees)longDiff 
+                   complete:(QuestLocationBlock)onComplete;
 
 - (void) decodeLocation:(CLLocation *)location complete:(DecodedLocationBlock)onComplete;
 - (void) validateLocation:(CLLocation *)location complete:(ValidatedLocationBlock)onComplete;

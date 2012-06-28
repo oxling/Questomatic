@@ -14,13 +14,15 @@ typedef void (^CompleteBlock)(Quest * location);
 
 @interface MapAPIController : NSObject <NSURLConnectionDelegate> {
     NSURLConnection * connection;
-    CompleteBlock block;
     NSMutableData * data;
+    
+    CompleteBlock onComplete;
 }
 @property (nonatomic, retain) NSURLConnection * connection;
 @property (nonatomic, retain) NSMutableData * data;
-@property (nonatomic, copy) CompleteBlock block;
+@property (nonatomic, copy) id onComplete;
 
 - (void) requestNearLocation:(CLLocation *)location onComplete:(CompleteBlock)complete;
+- (void) detailsOfQuest:(Quest *)quest onComplete:(CompleteBlock)complete;
 
 @end

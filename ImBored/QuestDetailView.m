@@ -7,6 +7,7 @@
 //
 
 #import "QuestDetailView.h"
+#import "TriangleView.h"
 #import <QuartzCore/QuartzCore.h>
 
 #define SHADOWSPACE 6
@@ -119,8 +120,12 @@
     
     [questLabel release];
     [titleLabel release];
+    [triangle release];
+    
     [super dealloc];
 }
+
+#pragma mark - Layout and Drawing
 
 - (void) updateFrameWithWidth:(CGFloat)width {
     CGSize titleSize = [titleLabel.text sizeWithFont:titleLabel.font constrainedToSize:CGSizeMake(width-30, 200) lineBreakMode:UILineBreakModeWordWrap];
@@ -156,5 +161,36 @@
     
     [self.layer addAnimation:anim forKey:@"pushanimation"];
 }
+
+- (void) setShowsRightTriangle:(BOOL)showTriangle {
+   
+    [triangle removeFromSuperview];
+    [triangle release];
+    triangle = nil;
+    
+    if (showTriangle) {        
+        triangle = [[TriangleView rightTriangle] retain];
+        triangle.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin;
+        [self addSubview:triangle];
+        triangle.center = CGPointMake(CGRectGetMaxX(self.frame) - CGRectGetMidX(triangle.frame) - 5, self.center.y);
+    }
+    
+}
+
+- (void) setShowsLeftTriangle:(BOOL)showTriangle {
+    
+    [triangle removeFromSuperview];
+    [triangle release];
+    triangle = nil;
+    
+    if (showTriangle) {        
+        triangle = [[TriangleView leftTriangle] retain];
+        triangle.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin;
+        [self addSubview:triangle];
+        triangle.center = CGPointMake(CGRectGetMinX(self.frame) + CGRectGetMidX(triangle.frame) + 5, self.center.y);
+    }
+    
+}
+
 
 @end

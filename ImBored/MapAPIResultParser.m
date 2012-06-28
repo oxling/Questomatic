@@ -12,15 +12,15 @@
 @interface MapAPIResultParser ()  {
 @private
     BOOL parseGeometry;
-    NSMutableString * typeString;
-
+    NSNumberFormatter * _coordinateFormatter;
+    Quest * _result;
 }
-@property (nonatomic, retain)  NSMutableString * typeString;
+@property (nonatomic, retain) Quest * result;
 
 @end
 
 @implementation MapAPIResultParser
-@synthesize result, element, typeString;
+@synthesize result = _result;
 
 /* 
  <status>OK</status>
@@ -41,9 +41,8 @@
 
 - (void) dealloc {
     [resultArray release];
-    [result release];
-    [element release];
-    [typeString release];
+    [_coordinateFormatter release];
+    [_result release];
     
     [super dealloc];
 }
@@ -60,97 +59,91 @@
     return str;
 }
 
-- (NSArray *) parseResults:(NSData *)data {    
-    resultArray = [[NSMutableArray array] retain];
-
-    NSXMLParser * parser = [[NSXMLParser alloc] initWithData:data];
-    parser.delegate = self;
+- (NSArray *) parseLocationResults:(NSData *)data {    
+    resultArray = [[NSMutableArray alloc] init];
+    _coordinateFormatter = [[NSNumberFormatter alloc] init];
    
-    [parser parse];
-    [parser release];
+    [self parseData:data];
     
     NSArray * finalResults = [NSArray arrayWithArray:resultArray];
     
     [resultArray release];
     resultArray = nil;
     
-    return finalResults;
+    [_coordinateFormatter release];
+    _coordinateFormatter = nil;
     
+    return finalResults;
 }
 
-- (void) parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict {
-    self.element = elementName;
-    
-    if ([self.element isEqualToString:@"result"]) {
-        self.result = [[[Quest alloc] init] autorelease];
+- (void) didStartElement:(NSString *)element {
+
+    if ([element isEqualToString:@"result"]) {
+        _result = [[Quest alloc] init];
     }
     
-    else if ([self.element isEqualToString:@"location"]) {
+    else if ([element isEqualToString:@"location"]) {
         parseGeometry = YES;
     }
-    
-    else if ([self.element isEqualToString:@"type"]) {
-        self.typeString = [NSMutableString string];
-    }
 }
 
-- (void) parser:(NSXMLParser *)parser foundCharacters:(NSString *)string {
-    if ([self.element isEqualToString:@"status"]) {
-        if ([string isEqualToString:@"OK"] == NO) {
-            [parser abortParsing];
-        }
+- (void) didFindString:(NSString *)string inElement:(NSString *)element {
+        
+    if ([element isEqualToString:@"name"]) {
+        _result.name = string;
     }
     
-    else if ([self.element isEqualToString:@"name"]) {
-        [self.result.name appendString:string];
+    else if ([element isEqualToString:@"vicinity"]) {
+        _result.address = string;
     }
     
-    else if ([self.element isEqualToString:@"vicinity"]) {
-        [self.result.address appendString:string];
+    else if ([element isEqualToString:@"lat"] && parseGeometry) {
+        NSNumber * latNumber = [_coordinateFormatter numberFromString:string];
+        CLLocationDegrees lat = [latNumber doubleValue];
+        _result.coordinate = CLLocationCoordinate2DMake(lat, _result.coordinate.longitude);
     }
     
-    else if ([self.element isEqualToString:@"lat"] && parseGeometry) {
-        [self.result.latitude appendString:string];
+    else if ([element isEqualToString:@"lng"] && parseGeometry) {
+        NSNumber * lngNumber = [_coordinateFormatter numberFromString:string];
+        CLLocationDegrees lng = [lngNumber doubleValue];
+        _result.coordinate = CLLocationCoordinate2DMake(_result.coordinate.latitude, lng);
     }
     
-    else if ([self.element isEqualToString:@"lng"] && parseGeometry) {
-        [self.result.longitude appendString:string];
+    else if ([element isEqualToString:@"type"]) {
+        [_result.types addObject:string];
     }
     
-    else if ([self.element isEqualToString:@"type"]) {
-        [typeString appendString:string];
-    }
-    
-    else if ([self.element isEqualToString:@"html_attribution"]) {
+    else if ([element isEqualToString:@"html_attribution"]) {
         NSString * normalString = [self processListingsHTML:string];
-        [self.result.listings appendString:normalString];
+        _result.listings = normalString;
+    }
+    
+    else if ([element isEqualToString:@"icon"]) {
+        _result.iconURL = string;
+    }
+    
+    else if ([element isEqualToString:@"reference"]) {
+        _result.reference = string;
     }
 }
 
-
-- (void) parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName {
+- (void) didEndElement:(NSString *)element {
     
-    if ([elementName isEqualToString:@"result"]) {
+    if ([element isEqualToString:@"result"]) {
         
         if ([self.result.listings length] > 0) {
             DebugLog(@"Result %@ has listings: %@", self.result, self.result.listings);
         }
         
-        [resultArray addObject:self.result];
-        self.result = nil;
+        [resultArray addObject:_result];
+        
+        [_result release];
+        _result = nil;
     }
     
-    else if ([elementName isEqualToString:@"location"]) {
+    else if ([element isEqualToString:@"location"]) {
         parseGeometry = NO;
     }
-    
-    else if ([elementName isEqualToString:@"type"]) {
-        [self.result.types addObject:[NSString stringWithString:typeString]];
-        self.typeString = nil;
-    }
-    
-    self.element = nil;
-
 }
 
 @end

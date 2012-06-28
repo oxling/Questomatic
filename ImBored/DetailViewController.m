@@ -9,6 +9,7 @@
 #import "DetailViewController.h"
 #import "QuestDetailView.h"
 #import "Quest.h"
+#import "MapAPIController.h"
 
 @implementation DetailViewController
 @synthesize addressTextView, imageView, quest, questView;
@@ -29,6 +30,25 @@
     [tapper release];
     
     addressTextView.text = quest.address;
+    [questView setShowsLeftTriangle:YES];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        UIImage * img = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:quest.iconURL]]];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [imageView setImage:img];
+        });
+    });
+    
+    if (quest.websiteURL == nil) {
+    
+        MapAPIController * ctr = [[MapAPIController alloc] init];
+        [ctr detailsOfQuest:quest onComplete:^(Quest *location) {
+            DebugLog(@"Loaded URL for quest: %@", quest.websiteURL);
+            [ctr release];
+        }];
+
+    }
+    
 }
 
 - (void) viewDidUnload {
@@ -44,11 +64,11 @@
 }
 
 - (void) didTapCancel:(id)sender {
-    
+    //TODO
 }
 
 - (void) didTapComplete:(id)sender {
-    
+    //TODO
 }
 
 - (void) didTapViewMap:(id)sender {

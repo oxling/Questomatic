@@ -107,12 +107,15 @@ static float randomFraction() {
 }
 
 UInt8 tryCount = 0;
+
 - (void) randomLocationNear:(CLLocationCoordinate2D)center 
-                    latitudeRange:(CLLocationDegrees)latDiff longitudeRange:(CLLocationDegrees)longDiff 
+                    latitudeRange:(CLLocationDegrees)latDiff 
+             longitudeRange:(CLLocationDegrees)longDiff 
                          complete:(QuestLocationBlock)onComplete
 
 {
     CLLocation * newLoc = [self clLocation:center latitudeRange:latDiff longitudeRange:longDiff];
+    
     [self validateLocation:newLoc complete:^(BOOL valid, CLPlacemark *placemark) {
         
         //If it's not valid, try again.
@@ -124,23 +127,28 @@ UInt8 tryCount = 0;
                     [self randomLocationNear:center latitudeRange:latDiff longitudeRange:longDiff complete:[[onComplete copy] autorelease]];
                 });
                 
-            //Couldn't reverse geocode it, or maybe the user is looking at the ocean
+            //Couldn't reverse geocode it after 3 retries, or maybe the user is looking at the ocean
             } else {
                 tryCount = 0;
                 DebugLog(@"Could not decode and validate location near %f, %f after 3 tries.", newLoc.coordinate.latitude, newLoc.coordinate.longitude);
                 
                 Quest * loc = [[Quest alloc] init];
                 loc.coordinate = newLoc.coordinate;
+                
+                //Check to see if it's in the ocean or in a lake
                 if (placemark.inlandWater) {
                     loc.title = placemark.inlandWater;
                     [loc.types addObject:@"water"];
                 }
+                
                 else if (placemark.ocean) {
                     [loc.types addObject:@"water"];
                     loc.title = placemark.ocean;
                 }
-                else 
+                else  {
                     loc.title = @"Unknown Location";
+                }
+                
                 loc.subtitle = [NSString stringWithFormat:@"%0.6f, %0.6f", loc.coordinate.latitude, loc.coordinate.longitude];
                 
                 onComplete(loc);
@@ -207,22 +215,23 @@ UInt8 tryCount = 0;
     
     [self decodeLocation:location complete:^(NSArray *placemarks) {
         
+        //Didn't find anything
         if (!placemarks || [placemarks count] == 0) {
             onComplete(NO, nil);
             return;
         }
         
-        BOOL inTheGoddamnOcean = NO;
+        BOOL inTheOcean = NO;
         for (CLPlacemark * p in placemarks) {
             if (p.inlandWater || p.ocean) {
-                inTheGoddamnOcean = YES;
+                inTheOcean = YES;
                 break;
             }
         }
         
         CLPlacemark * p = [[[placemarks objectAtIndex:0] copy] autorelease];
         
-        onComplete(inTheGoddamnOcean == NO, p);
+        onComplete(inTheOcean == NO, p);
     }];
 }
 
