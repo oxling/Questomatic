@@ -9,25 +9,27 @@
 #import "MapAPIDetailParser.h"
 #import "Quest.h"
 
-@interface MapAPIDetailParser () {
-@private
-    Quest * _quest;
-}
-@end
-
 @implementation MapAPIDetailParser
 
 NSMutableString * currentString = nil;
 
 - (void) parseDetailResults:(NSData *)data intoQuest:(Quest *)quest {
-    _quest = quest;
-    [self parseData:data];    
-}
-
-- (void) didFindString:(NSString *)string inElement:(NSString *)element {
-    if ([element isEqualToString:@"website"]) {
-        _quest.websiteURL = string;
+    NSError * error = nil;
+    id result = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+    
+    if (!result || error) {
+        DebugLog(@"Error parsing details: %@", [error localizedDescription]);
+        return;
     }
+    
+    quest.address = [result valueForKeyPath:@"result.formatted_address"];
+    
+    NSString * websiteURL = [result valueForKeyPath:@"result.website"];
+    if (!websiteURL) {
+        websiteURL = [result valueForKeyPath:@"result.url"];
+    }
+    
+    quest.websiteURL = websiteURL;
 }
 
 @end

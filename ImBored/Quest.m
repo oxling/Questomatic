@@ -13,14 +13,6 @@
 @synthesize name = _name, address = _address, types = _types, listings = _listings, iconURL = _iconURL, reference = _reference;
 @synthesize websiteURL = _websiteURL;
 
-- (id) init {
-    self = [super init];
-    if (self) {
-        _types = [[NSMutableArray alloc] init];
-    }
-    return self;
-}
-
 - (void) dealloc{
     [_title release];
     [_subtitle release];

@@ -12,9 +12,8 @@
 
 #import "Quest.h"
 
-@interface MapAPIResultParser : BaseXMLParser {    
-    Quest * _result;
-    NSMutableArray * resultArray;
+@interface MapAPIResultParser : NSObject {    
+
 }
 
 

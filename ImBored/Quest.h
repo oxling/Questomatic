@@ -35,7 +35,7 @@
 
 @property (nonatomic, copy) NSString * name;
 @property (nonatomic, copy) NSString * address;
-@property (nonatomic, readonly) NSMutableArray * types;
+@property (nonatomic, copy) NSArray * types;
 @property (nonatomic, copy) NSString * listings;
 @property (nonatomic, copy) NSString * iconURL;
 @property (nonatomic, copy) NSString * reference;

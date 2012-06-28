@@ -9,18 +9,13 @@
 #import "MapAPIResultParser.h"
 #import <CoreLocation/CoreLocation.h>
 
-@interface MapAPIResultParser ()  {
-@private
-    BOOL parseGeometry;
-    NSNumberFormatter * _coordinateFormatter;
-    Quest * _result;
-}
-@property (nonatomic, retain) Quest * result;
+@interface MapAPIResultParser ()  {}
+
+- (NSArray *) parseJSONObject:(NSData *)data;
 
 @end
 
 @implementation MapAPIResultParser
-@synthesize result = _result;
 
 /* 
  <status>OK</status>
@@ -39,15 +34,10 @@
  </result>
 */
 
-- (void) dealloc {
-    [resultArray release];
-    [_coordinateFormatter release];
-    [_result release];
+- (NSString * ) processListingsHTML:(NSString *)listing {
     
-    [super dealloc];
-}
-
-- (NSMutableString * ) processListingsHTML:(NSString *)listing {
+    if (listing == nil)
+        return nil;
     
     NSMutableString * str = [NSMutableString stringWithString:listing];
     [str replaceOccurrencesOfString:@"&lt;" withString:@"<" options:NSCaseInsensitiveSearch range:NSMakeRange(0, [str length])];
@@ -59,91 +49,43 @@
     return str;
 }
 
-- (NSArray *) parseLocationResults:(NSData *)data {    
-    resultArray = [[NSMutableArray alloc] init];
-    _coordinateFormatter = [[NSNumberFormatter alloc] init];
+- (NSArray *) parseJSONObject:(NSData *)data {
+    NSMutableArray * quests = [[[NSMutableArray alloc] init] autorelease];
    
-    [self parseData:data];
+    NSArray * results = [data valueForKey:@"results"];
+    for (NSDictionary * d in results) {
+        Quest * q = [[Quest alloc] init];
+        
+        q.name = [d objectForKey:@"name"];
+        q.types = [d objectForKey:@"types"];
+        double lat = [[d valueForKeyPath:@"geometry.location.lat"] doubleValue];
+        double lng = [[d valueForKeyPath:@"geometry.location.lng"] doubleValue];
+        q.coordinate = CLLocationCoordinate2DMake(lat, lng);
+        q.iconURL = [d objectForKey:@"icon"];
+        q.types = [d objectForKey:@"types"];
+        q.address = [d objectForKey:@"vicinity"];
+        q.reference = [d objectForKey:@"reference"];
+        q.listings = [self processListingsHTML:[d objectForKey:@"html_attribution"]];
+        
+        [quests addObject:q];
+        
+        [q release];
+    }
     
-    NSArray * finalResults = [NSArray arrayWithArray:resultArray];
-    
-    [resultArray release];
-    resultArray = nil;
-    
-    [_coordinateFormatter release];
-    _coordinateFormatter = nil;
-    
-    return finalResults;
+    return [NSArray arrayWithArray:quests];
 }
 
-- (void) didStartElement:(NSString *)element {
+- (NSArray *) parseLocationResults:(NSData *)data {    
 
-    if ([element isEqualToString:@"result"]) {
-        _result = [[Quest alloc] init];
+    NSError * error = nil;
+    id jsonData = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+    if (!jsonData || error) {
+        DebugLog(@"Error parsing data: %@", [error localizedDescription]);
+    } else {
+        return [self parseJSONObject:jsonData];
     }
     
-    else if ([element isEqualToString:@"location"]) {
-        parseGeometry = YES;
-    }
-}
-
-- (void) didFindString:(NSString *)string inElement:(NSString *)element {
-        
-    if ([element isEqualToString:@"name"]) {
-        _result.name = string;
-    }
-    
-    else if ([element isEqualToString:@"vicinity"]) {
-        _result.address = string;
-    }
-    
-    else if ([element isEqualToString:@"lat"] && parseGeometry) {
-        NSNumber * latNumber = [_coordinateFormatter numberFromString:string];
-        CLLocationDegrees lat = [latNumber doubleValue];
-        _result.coordinate = CLLocationCoordinate2DMake(lat, _result.coordinate.longitude);
-    }
-    
-    else if ([element isEqualToString:@"lng"] && parseGeometry) {
-        NSNumber * lngNumber = [_coordinateFormatter numberFromString:string];
-        CLLocationDegrees lng = [lngNumber doubleValue];
-        _result.coordinate = CLLocationCoordinate2DMake(_result.coordinate.latitude, lng);
-    }
-    
-    else if ([element isEqualToString:@"type"]) {
-        [_result.types addObject:string];
-    }
-    
-    else if ([element isEqualToString:@"html_attribution"]) {
-        NSString * normalString = [self processListingsHTML:string];
-        _result.listings = normalString;
-    }
-    
-    else if ([element isEqualToString:@"icon"]) {
-        _result.iconURL = string;
-    }
-    
-    else if ([element isEqualToString:@"reference"]) {
-        _result.reference = string;
-    }
-}
-
-- (void) didEndElement:(NSString *)element {
-    
-    if ([element isEqualToString:@"result"]) {
-        
-        if ([self.result.listings length] > 0) {
-            DebugLog(@"Result %@ has listings: %@", self.result, self.result.listings);
-        }
-        
-        [resultArray addObject:_result];
-        
-        [_result release];
-        _result = nil;
-    }
-    
-    else if ([element isEqualToString:@"location"]) {
-        parseGeometry = NO;
-    }
+    return nil;
 }
 
 @end
