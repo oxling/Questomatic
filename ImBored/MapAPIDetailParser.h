@@ -7,10 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "BaseXMLParser.h"
 
 @class Quest;
-@interface MapAPIDetailParser : BaseXMLParser
+@interface MapAPIDetailParser : NSObject
 
 - (void) parseDetailResults:(NSData *) data intoQuest:(Quest *)quest;
 

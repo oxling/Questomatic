@@ -16,6 +16,8 @@
     
     Quest * quest;
 }
+- (IBAction)didTapViewWebsite:(id)sender;
+@property (retain, nonatomic) IBOutlet UIButton *viewWebsiteButton;
 
 @property (nonatomic, retain) IBOutlet UITextView * addressTextView;
 @property (nonatomic, retain) IBOutlet UIImageView * imageView;
@@ -23,7 +25,6 @@
 @property (nonatomic, retain) Quest * quest;
 
 - (IBAction)didTapComplete:(id)sender;
-- (IBAction)didTapCancel:(id)sender;
 - (IBAction)didTapViewMap:(id)sender;
 
 @end

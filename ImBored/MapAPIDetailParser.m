@@ -22,8 +22,6 @@ NSMutableString * currentString = nil;
         return;
     }
     
-    quest.address = [result valueForKeyPath:@"result.formatted_address"];
-    
     NSString * websiteURL = [result valueForKeyPath:@"result.website"];
     if (!websiteURL) {
         websiteURL = [result valueForKeyPath:@"result.url"];

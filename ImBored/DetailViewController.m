@@ -12,6 +12,7 @@
 #import "MapAPIController.h"
 
 @implementation DetailViewController
+@synthesize viewWebsiteButton;
 @synthesize addressTextView, imageView, quest, questView;
 
 - (void) dealloc {
@@ -20,6 +21,7 @@
     [quest release];
     [questView release];
     
+    [viewWebsiteButton release];
     [super dealloc];
 }
 
@@ -40,11 +42,14 @@
     });
     
     if (quest.websiteURL == nil) {
-    
+        viewWebsiteButton.enabled = NO;
+        
         MapAPIController * ctr = [[MapAPIController alloc] init];
         [ctr detailsOfQuest:quest onComplete:^(Quest *location) {
-            DebugLog(@"Loaded URL for quest: %@", quest.websiteURL);
             [ctr release];
+            if (quest.websiteURL) {
+                viewWebsiteButton.enabled = YES;
+            }
         }];
 
     }
@@ -52,6 +57,7 @@
 }
 
 - (void) viewDidUnload {
+    [self setViewWebsiteButton:nil];
     [super viewDidUnload];
     
     self.questView = nil;
@@ -63,10 +69,6 @@
     [self dismissModalViewControllerAnimated:YES];
 }
 
-- (void) didTapCancel:(id)sender {
-    //TODO
-}
-
 - (void) didTapComplete:(id)sender {
     //TODO
 }
@@ -75,6 +77,8 @@
     [[UIApplication sharedApplication] openURL:[quest getLink]];
 }
 
-
+- (IBAction)didTapViewWebsite:(id)sender {
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:quest.websiteURL]];
+}
 
 @end
